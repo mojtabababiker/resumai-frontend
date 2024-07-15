@@ -7,8 +7,8 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 245, 245, 245;
   --background-end-rgb: 245, 245, 245;
-  --primary-rgb: 68, 56, 93;
-  --primary-light-rgba: 68, 56, 93, 0.5;
+  --primary-rgb: 80, 61, 153; 
+  --primary-light-rgba: 107, 95, 171, 1;
 }
 
 body {
@@ -20,5 +20,6 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+    color: rgb(107, 95, 171);
   }
 }
