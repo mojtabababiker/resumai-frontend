@@ -6,4 +6,4 @@
 <br>
 <br>
 
-> **This the frontend repository for the Resumai project** <br> For more information about `Resumai` you can go [here]()
+> **This the frontend repository for the Resumai project** <br> For more information about `Resumai` you can go [here](https://github.com/mojtabababiker/resumai)
