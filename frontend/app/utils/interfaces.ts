@@ -19,9 +19,14 @@ export interface User {
     is_active: boolean;
 }
 
+interface AccessToken {
+    access_token: string;
+    token_type: string;
+}
+
 export interface BaseResponse {
     isLoading: boolean;
-    isError: Error | null;
+    isError: any | Error | null;
 }
 
 export interface UserResponse extends BaseResponse{
@@ -29,5 +34,5 @@ export interface UserResponse extends BaseResponse{
 }
 
 export interface TokenResponse extends BaseResponse {
-    accessToken: string | null;
+    accessToken: AccessToken | null;
 }

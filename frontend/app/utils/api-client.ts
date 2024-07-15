@@ -6,10 +6,7 @@ import { globalFetcherProps } from "@/app/utils/interfaces";
 const BASE_API_URL = 'http://localhost:8000/api/v1';
 
 export const apiClient = axios.create({
-  baseURL: BASE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: BASE_API_URL
 });
 
 
@@ -20,6 +17,7 @@ export const apiClient = axios.create({
  */
 export const globalFetcher = async ({url, method, token, bodyData, contentType='application/json' }: globalFetcherProps) => {
     try{
+        console.log('befor API call data = ' + bodyData);
         const {status, data} = await apiClient.request(
             {
                 url,
@@ -34,7 +32,7 @@ export const globalFetcher = async ({url, method, token, bodyData, contentType='
         return data;
     } catch (error) {
         console.log(error);
-        // throw new Error(error);
+        throw error;
     }
 }
 

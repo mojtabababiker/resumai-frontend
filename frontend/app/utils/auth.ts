@@ -1,7 +1,9 @@
+'use client';
 // responsible for handling authentication and authorization
 import useSWR from 'swr';
 import { globalFetcher } from "@/app/utils/api-client";
 import { UserResponse, TokenResponse } from "@/app/utils/interfaces";
+import { AxiosError } from 'axios';
 
 /**
  * Check if the current user is authenticated
@@ -38,21 +40,21 @@ export function useUser(): UserResponse {
  *                  such as grant_type, client_id, and client_secret
  * @returns {TokenResponse} an object that contains the access token, and some information about the request
  */
-export function getLoginToken(formData: FormData): TokenResponse {
-    const {data, error, isLoading} = useSWR(
-        {
+export async function getLoginToken(formData: FormData): Promise<TokenResponse> {
+
+    try {
+        const res = await globalFetcher ({
             url:'auth/session',
             method: 'POST',
             token: '',
-            bodyData: formData.toString(),
+            bodyData: formData,
             contentType: 'application/x-www-form-urlencoded'
-        },
-        globalFetcher,
-        {revalidateOnFocus: false, revalidateOnReconnect: false}
-    )
-    return {
-        accessToken: data,
-        isLoading,
-        isError: error
-    };
+        });
+        if (!res.access_token) {
+            throw new Error('Access token not found');
+        }
+        return {accessToken: res.access_token, isError: null, isLoading: false};
+    } catch (error) {
+        return {accessToken:null, isError: {...error.response.data, status: error.response.status}, isLoading: false};
+    }
 }
