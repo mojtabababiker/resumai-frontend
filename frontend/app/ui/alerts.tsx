@@ -1,5 +1,5 @@
 // A set of alerts components used in the UI.
-export const AlertWrongCredentials = () => {
+export const AlertWrongCredentials = ({ message }: { message: string }) => {
     return (
         <div className="fixed top-6 flex items-center p-3 text-sm text-gray-800 border border-red-900 rounded-lg bg-gray-50" role="alert">
             <svg className="flex-shrink-0 inline w-3 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -7,7 +7,7 @@ export const AlertWrongCredentials = () => {
             </svg>
             <span className="sr-only">Wrong Credentials</span>
             <div>
-                <span className="font-medium">Alert!</span> Wrong username or password
+                <span className="font-medium">Alert!</span> {message}
             </div>
         </div>
     )
