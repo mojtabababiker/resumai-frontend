@@ -1,15 +1,7 @@
  // utilities that interact with the FastAPI backend, and return the data in a format that the frontend can use
 
 import axios from "axios";
-
-interface globalFetcherProps {
-    url: string;
-    method: string;
-    token: string;
-    bodyData?: string | object;
-    contentType?: string;
-    
-}
+import { globalFetcherProps } from "@/app/utils/interfaces";
 
 const BASE_API_URL = 'http://localhost:8000/api/v1';
 

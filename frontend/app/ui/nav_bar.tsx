@@ -2,14 +2,10 @@
 // the nav bar component
 import React from 'react';
 import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
-import { useUser } from "@/app/utils/auth";
+import { User } from "@/app/utils/interfaces";
 
-export default function NavBar() {
 
-    const { user, isLoading, isError } = useUser();
-
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) console.log(isError);
+export default function NavBar({ user }: { user: User | null }) {
 
     const navItems = ['Home', 'About', 'Services', 'Contact'];
     const navLinkCSS = "block py-2 px-3 hover:text-[rgb(var(--primary-rgb))] focus:text-[rgb(var(--primary-rgb))] text-[rgba(var(--primary-light-rgba))] md:p-0 transition-all ease-in";
