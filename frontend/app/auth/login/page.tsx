@@ -14,7 +14,7 @@ export default function Login() {
         const { accessToken, isError, isLoading } = await getLoginToken(formData);
 
         if (!isError && accessToken) {
-            localStorage.setItem('auth-token', JSON.stringify(accessToken.access_token));
+            localStorage.setItem('auth-token', JSON.stringify(accessToken));
             // window.location.href = '/dashboard';
             console.log('token', accessToken);
             console.log('to the dashboard');
