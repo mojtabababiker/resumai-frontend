@@ -3,7 +3,6 @@
 import useSWR from 'swr';
 import { globalFetcher } from "@/app/utils/api-client";
 import { UserResponse, TokenResponse } from "@/app/utils/interfaces";
-import { AxiosError } from 'axios';
 
 /**
  * Check if the current user is authenticated
@@ -22,7 +21,7 @@ export function useUser(): UserResponse {
         };
     }
     const {data, error, isLoading} = useSWR(
-        {url: '/users/me', method: 'GET', token: tokenObject.access_token},
+        {url: '/users/me', method: 'GET', token: tokenObject},
         globalFetcher,
         {revalidateOnFocus: false, revalidateOnReconnect: true}
     );
@@ -31,6 +30,26 @@ export function useUser(): UserResponse {
         isLoading,
         isError: error
     };
+}
+
+export async function registerUser(formData: FormData): Promise<TokenResponse> {
+    const formDataObj = Object.fromEntries(formData.entries());
+
+    try {
+        const res = await globalFetcher({
+            url: '/users',
+            method: 'POST',
+            token: '',
+            contentType: 'application/json',
+            bodyData: JSON.stringify(formDataObj),
+        });
+        if (!res.access_token) {
+            throw new Error('Error happened in the registration process, please try again');
+        }
+        return {accessToken: res.access_token, isError: null, isLoading: false};
+    } catch (error) {
+        return {accessToken: null, isError: error, isLoading: false};
+    }
 }
 
 /**
