@@ -5,7 +5,7 @@ import SignUpForm from "@/app/ui/signup-form";
 import { getLoginToken } from "@/app/utils/auth";
 import { AlertWrongCredentials } from "@/app/ui/alerts";
 
-export default function Login() {
+export default function SignUp() {
     const [unAuth, setUnAuth] = useState({ isError: false, message: '' });
     // const [pass, setPass] = useState('');  // a state the saved the value of the password field
     // const [passUnMatch, setPassUnMatch] = useState(false);  // a flag indicate either the password matches or not
@@ -25,7 +25,12 @@ export default function Login() {
     const handleSubmit = async (event: BaseSyntheticEvent) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-        console.log(formData);
+        console.log(Array.from(formData.entries()));
+        // call the create_user auth util
+
+        // check for errors
+
+        // save the access token and redirect user to dashboard
     }
     return (
         <>
