@@ -20,7 +20,7 @@ export default function NavBar({ user }: { user: User | null }) {
 
     // log the user out, and delete its access token
     const handleLogout = () => {
-        localStorage.removeItem('access-token');
+        localStorage.removeItem('token');
         window.location.href = '/';
     }
 
