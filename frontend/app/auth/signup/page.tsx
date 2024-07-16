@@ -2,7 +2,7 @@
 // the login page
 import React, { BaseSyntheticEvent, useState } from "react";
 import SignUpForm from "@/app/ui/signup-form";
-import { getLoginToken } from "@/app/utils/auth";
+import { registerUser } from "@/app/utils/auth";
 import { AlertWrongCredentials } from "@/app/ui/alerts";
 
 export default function SignUp() {
@@ -26,11 +26,20 @@ export default function SignUp() {
         event.preventDefault();
         const formData = new FormData(event.target);
         console.log(Array.from(formData.entries()));
-        // call the create_user auth util
-
+        // call the registerUser auth util
+        const { accessToken, isError, isLoading } = await registerUser(formData);
         // check for errors
-
-        // save the access token and redirect user to dashboard
+        if (!isError && accessToken) {
+            // save the access token and redirect user to dashboard
+            localStorage.setItem('auth-token', JSON.stringify(accessToken));
+            // window.location.href = '/dashboard';
+            console.log('token', accessToken);
+            console.log('to the dashboard');
+        } else {
+            console.log('error: ', isError);
+            const message = isError.response ? isError.response.data.detail : isError.message;
+            setUnAuth({ isError: true, message: message });
+        }
     }
     return (
         <>
