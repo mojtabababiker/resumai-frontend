@@ -17,8 +17,7 @@ export default function HeroImagesSlider() {
               alt={`Hero Image ${index + 1}`}
               width={640}
               height={640}
-              objectFit='contain'
-              className=""
+              className="object-cover"
             />
           </div>
         ))}

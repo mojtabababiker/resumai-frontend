@@ -2,14 +2,38 @@
 // the nav bar component
 import React from 'react';
 import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
+import { User } from "@/app/utils/interfaces";
 
-export default function NavBar() {
+
+export default function NavBar({ user }: { user: User | null }) {
 
     const navItems = ['Home', 'About', 'Services', 'Contact'];
     const navLinkCSS = "block py-2 px-3 hover:text-[rgb(var(--primary-rgb))] focus:text-[rgb(var(--primary-rgb))] text-[rgba(var(--primary-light-rgba))] md:p-0 transition-all ease-in";
     const navLinkActiveCSS = "block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0";
     const [openNavbar, setOpenNavbar] = React.useState(false);
     const [activeLink, setActiveLink] = React.useState('Home');
+
+    // direct the user to the login page
+    const handleLogin = () => {
+        window.location.href = '/auth/login';
+    };
+
+    // log the user out, and delete its access token
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    }
+
+    // direct the un logged in user to the sign up page
+    const toSignUp = () => {
+        window.location.href = '/auth/signup';
+    }
+
+    // direct the logged in user to the dashboard page
+    const toDashboard = () => {
+        window.location.href = '/dashboard';
+    }
+
     return (
         <nav className="bg-[rgb(var(--background-start-rgb))] fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-lg transition-all ease-in delay-75">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -18,8 +42,8 @@ export default function NavBar() {
                     <span className="self-center text-2xl font-semibold whitespace-nowrap ">Resumai</span>
                 </a>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <ButtonOutLine className='hidden'>Login</ButtonOutLine>
-                    <ButtonSolid>Get Started</ButtonSolid>
+                    <ButtonOutLine className='hidden' onClick={user ? handleLogout : handleLogin}>{user ? "Logout" : "Login"}</ButtonOutLine>
+                    <ButtonSolid onClick={user ? toDashboard : toSignUp}>Get Started</ButtonSolid>
                     <button data-collapse-toggle="navbar-sticky" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-sticky" aria-expanded="false" onClick={() => setOpenNavbar(!openNavbar)}>
                         <span className="sr-only">Open main menu</span>
                         <svg className="w-5 h-5 outline-none text-[rgb(var(--primary-rgb))] " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
@@ -34,7 +58,8 @@ export default function NavBar() {
                                 <a href={`#${item}`} key={`navLink-${index}`} className={item == activeLink ? navLinkActiveCSS : navLinkCSS} onClick={() => { setActiveLink(item) }}>{item}</a>
                             </li>
                         ))}
-                        <button type="button" className="text-[rgb(var(--primary-rgb))] block md:hidden align-bottom justify-self-end hover:opacity-90 focus:ring-4 focus:outline-none focus:[rgba(var(--primary-light-rgba))] font-medium rounded-lg text-lg py-2 mt-24 text-center transition-all ease-in-out delay-100">Login</button>
+                        {/* <button type="button" className="text-[rgb(var(--primary-rgb))] block md:hidden align-bottom justify-self-end hover:opacity-90 focus:ring-4 focus:outline-none focus:[rgba(var(--primary-light-rgba))] font-medium rounded-lg text-lg py-2 mt-24 text-center transition-all ease-in-out delay-100">Login</button> */}
+                        <ButtonOutLine className='md:hidden' onClick={user ? handleLogout : handleLogin}>{user ? "Logout" : "Login"}</ButtonOutLine>
                     </ul>
                 </div>
             </div>
