@@ -32,7 +32,7 @@ export default function SignUp() {
         if (!isError && accessToken) {
             // save the access token and redirect user to dashboard
             localStorage.setItem('auth-token', JSON.stringify(accessToken));
-            // window.location.href = '/dashboard';
+            window.location.href = '/dashboard';
             console.log('token', accessToken);
             console.log('to the dashboard');
         } else {

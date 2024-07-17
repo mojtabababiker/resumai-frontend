@@ -15,7 +15,7 @@ export default function Login() {
 
         if (!isError && accessToken) {
             localStorage.setItem('auth-token', JSON.stringify(accessToken));
-            // window.location.href = '/dashboard';
+            window.location.href = '/dashboard';
             console.log('token', accessToken);
             console.log('to the dashboard');
         }
