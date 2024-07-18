@@ -1,3 +1,369 @@
 // the basic or default resume template
 // each field will be a separate component
 // each field will be editable and has its own customizing panel
+
+import { useState } from "react"
+import { titleProps, experienceProps, educationProps, projectsProps, certificateProps, language, templateProps } from "./interfaces"
+
+// dummy data
+const dummyData = {
+    templateId: "abcd1234",
+    title: {
+        name: "Emily Chen",
+        jobTitle: "Full Stack Developer",
+        links: [
+            {
+                "linkType": "LinkedIn",
+                "linkUrl": "https://www.linkedin.com/in/emilychen"
+            },
+            {
+                "linkType": "GitHub",
+                "linkUrl": "https://github.com/emilychen-dev"
+            },
+            {
+                "linkType": "Portfolio",
+                "linkUrl": "https://emilychen.dev"
+            }
+        ]
+    },
+    summary: "Dedicated Full Stack Developer with 5+ years of experience in designing, developing, and deploying scalable web applications. Proficient in JavaScript (ES6+), Python, and various frontend and backend frameworks including React, Vue.js, Node.js, and Django. Strong expertise in cloud technologies, particularly AWS and Google Cloud Platform. Passionate about writing clean, efficient code and implementing best practices in software development. Experienced in Agile methodologies and test-driven development. Committed to staying current with emerging technologies and industry trends. Proven track record of delivering high-quality projects on time and within budget, while effectively collaborating with cross-functional teams and mentoring junior developers.",
+    education: [
+        {
+            "schoolName": "University of California, Berkeley",
+            "degreeTitle": "Bachelor of Science in Computer Science",
+            "location": "Berkeley, CA",
+            "summary": "Graduated with honors (GPA: 3.8/4.0). Specialized in software engineering, machine learning, and distributed systems. Completed a senior thesis on 'Optimizing Distributed Database Systems for Real-time Analytics'. Active member of the ACM student chapter and Women in Computer Science club.",
+            "startingDate": "2014-09-01",
+            "endingDate": "2018-05-15"
+        }
+    ],
+    projects: [
+        {
+            "title": "E-commerce Platform",
+            "description": "Developed a comprehensive full-stack e-commerce platform using React for the frontend, Node.js (Express) for the backend, and MongoDB for data storage. Implemented features such as user authentication with JWT, product catalog with advanced filtering and search capabilities, shopping cart functionality, and secure payment integration using Stripe API. Utilized Redis for caching to improve performance and implemented real-time inventory updates using WebSockets. The platform also includes an admin dashboard for inventory management and sales analytics. Deployed the application on AWS using Elastic Beanstalk for easy scaling and management."
+        },
+        {
+            "title": "Weather Forecast App",
+            "description": "Created a mobile-responsive weather forecast application using Vue.js for the frontend and Express.js for the backend. Integrated with OpenWeatherMap API for accurate weather data. Implemented features such as geolocation for automatic local weather display, 5-day forecast with hourly breakdowns, and custom location saving. Utilized Vuex for state management and Vue Router for seamless navigation. Implemented service workers for offline functionality and push notifications for severe weather alerts. The app also includes an interactive map using Mapbox GL JS for visualizing weather patterns. Optimized the application for performance, achieving a Lighthouse score of 95+ across all categories."
+        }
+    ],
+    experiences: [
+        {
+            "companyName": "TechInnovate Inc.",
+            "roleTitle": "Senior Full Stack Developer",
+            "location": "San Francisco, CA",
+            "summary": "Lead developer for the company's main SaaS product, a project management tool used by over 50,000 users worldwide. Architected and implemented new features including real-time collaboration tools and automated workflow systems. Optimized database queries and implemented caching strategies, resulting in a 40% improvement in application response time. Mentored a team of 5 junior developers, conducting code reviews and pair programming sessions. Introduced and implemented a microservices architecture, improving scalability and allowing for more rapid feature development. Worked closely with the product team to define and refine product requirements, and with the UX team to ensure a seamless user experience. Implemented comprehensive unit and integration testing strategies, achieving 90%+ code coverage.",
+            "startingDate": "2020-03-01",
+            "endingDate": "Present"
+        },
+        {
+            "companyName": "WebSolutions LLC",
+            "roleTitle": "Full Stack Developer",
+            "location": "Austin, TX",
+            "summary": "Worked on various client projects, primarily using the MERN (MongoDB, Express, React, Node.js) stack. Developed a custom CMS for a major publishing company, incorporating features such as content versioning, scheduled publishing, and multi-user editing. Built a real-time analytics dashboard for a fintech startup, integrating with various APIs and implementing complex data visualizations using D3.js. Implemented responsive designs ensuring cross-browser compatibility and accessibility compliance. Collaborated with design and product teams to deliver high-quality web applications, consistently meeting or exceeding client expectations. Participated in daily stand-ups, sprint planning, and retrospectives as part of an Agile development process. Contributed to the company's internal component library, improving development efficiency across projects.",
+            "startingDate": "2018-06-01",
+            "endingDate": "2020-02-28"
+        }
+    ],
+    achievements: [
+        {
+            "title": "Best Hackathon Project - TechCrunch Disrupt",
+            "description": "Won first place at the 2019 TechCrunch Disrupt Hackathon for developing an AI-powered accessibility tool for visually impaired users. The project, named 'VisionAssist', uses computer vision and natural language processing to describe surroundings and read text in real-time. Implemented using TensorFlow.js for on-device machine learning and React Native for cross-platform mobile development. The project received interest from several assistive technology companies and is currently being developed into a full-fledged application."
+        },
+        {
+            "title": "Open Source Contributor - React.js",
+            "description": "Active contributor to React.js, with 3 merged pull requests improving performance and documentation. Notable contributions include optimizing the reconciliation algorithm for large lists, resulting in a 15% performance improvement in certain scenarios. Also authored a comprehensive guide on advanced hooks usage, which was incorporated into the official React documentation. Regularly participate in the React community, providing assistance on forums and contributing to discussions on future React features."
+        }
+    ],
+    certificates: [
+        {
+            "title": "AWS Certified Developer - Associate",
+            "description": "Demonstrates proficiency in developing, deploying, and debugging cloud-based applications using AWS. Covers topics including core AWS services, AWS security best practices, and the use of DevOps tools for continuous integration and delivery on AWS."
+        },
+        {
+            "title": "Google Cloud Professional Developer",
+            "description": "Validates expertise in building scalable and highly available applications using Google Cloud technologies. Includes proficiency in cloud-native application development, data storage solutions, and security practices in Google Cloud Platform."
+        }
+    ],
+    skills: [
+        "JavaScript (ES6+)",
+        "TypeScript",
+        "Python",
+        "React",
+        "Vue.js",
+        "Node.js",
+        "Express.js",
+        "Django",
+        "MongoDB",
+        "PostgreSQL",
+        "GraphQL",
+        "RESTful APIs",
+        "AWS (EC2, S3, Lambda, DynamoDB)",
+        "Google Cloud Platform",
+        "Docker",
+        "Kubernetes",
+        "CI/CD (Jenkins, GitLab CI)",
+        "Git",
+        "Agile Methodologies",
+        "Test-Driven Development",
+        "Microservices Architecture"
+    ],
+    languages: [
+        {
+            "name": "English",
+            "proficient": "native"
+        },
+        {
+            "name": "Mandarin Chinese",
+            "proficient": "fluent"
+        },
+        {
+            "name": "Spanish",
+            "proficient": "intermediate"
+        }
+    ]
+}
+
+
+function Title(props: titleProps) {
+    const { name, jobTitle, links, children, className } = props;
+
+    return (
+        <>
+            <div className="min-w-full flex justify-center items-center mb-3">
+                <h1 className="min-w-full text-center text-zinc-900 text-4xl font-semibold">{name}</h1>
+            </div>
+            <div className="min-w-full flex justify-center items-center">
+                <h3 className="min-w-full text-center text-zinc-900 text-2xl">{jobTitle}</h3>
+            </div>
+            <div>
+                <ul className="flex flex-row items-center justify-center links-list gap-3">
+                    {links?.map((link, idx) => {
+                        return (
+                            <li key={`link-${idx}`} className="text-zinc-700 text-sm hover:text-sky-900">
+                                <a href={link.linkUrl} className="text-slate-600 hover:text-sky-900">{link.linkType}</a>
+                            </li>
+                        )
+                    }
+                    )}
+
+                </ul>
+            </div>
+        </>
+    )
+
+}
+
+// experience component
+function Experience(props: experienceProps) {
+    const {
+        companyName, roleTitle, startingDate, endingDate, location, summary
+    } = props;
+    return (
+        <>
+            <div className="flex flex-row justify-between items-stretch p-0 m-0 mb-1">
+                <div><h3 className="text-zinc-500 text-sm ">{companyName}</h3></div>
+                <div><p className="text-zinc-500 text-sm ">{location}</p></div>
+            </div>
+            <div className="flex flex-row justify-between items-center p-0 m-0 mb-1">
+                <div><h3 className="text-zinc-800 text-lg">{roleTitle}</h3></div>
+                <div><p className="text-zinc-500 text-sm text-center align-middle">{startingDate} <span className="font-semibold">TO</span> {endingDate}</p></div>
+            </div>
+            {
+                summary && <div className="flex flex-row justify-between items-stretch p-0 m-0 text-zinc-600 text-xs">
+                    <div><p>{summary}</p></div>
+                </div>
+            }
+        </>
+    )
+}
+// education component
+function Education(props: educationProps) {
+    const {
+        schoolName, degreeTitle, startingDate, endingDate, location, summary
+    } = props;
+    return (
+        <>
+            <div className="flex flex-row justify-between items-stretch p-0 m-0">
+                <div><h3 className="text-zinc-500 text-sm">{schoolName}</h3></div>
+                <div><p className="text-zinc-500 text-sm ">{location}</p></div>
+            </div>
+            <div className="flex flex-row justify-between items-stretch p-0 m-0">
+                <div><h3 className="text-zinc-800 text-lg">{degreeTitle}</h3></div>
+                <div><p className="text-zinc-500 text-sm text-center align-middle">{startingDate} <span className="font-semibold">TO</span> {endingDate}</p></div>
+            </div>
+            {
+                summary && <div className="flex flex-row justify-between items-stretch p-0 m-0 text-zinc-600 text-xs">
+                    <div><p>{summary}</p></div>
+                </div>
+            }
+        </>
+    )
+}
+
+function Project(props: projectsProps) {
+    const { title, description } = props
+
+    return (
+        <>
+            <h1 className="min-w-full text-zinc-800 text-lg ">{title}</h1>
+            <p className="w-full p-0 m-0 text-zinc-600 text-xs">{description}</p>
+        </>
+    )
+}
+
+// certificate component
+function Certificate(props: certificateProps) {
+    const { title, description } = props
+
+    return (
+        <>
+            <h1 className="min-w-full text-zinc-800 text-lg ">{title}</h1>
+            <p className="w-full p-0 m-0 text-zinc-600 text-xs">{description}</p>
+        </>
+    )
+}
+
+// language component
+function Language(props: language) {
+    const { name, proficient } = props;
+
+    return (
+        <div className="p-0 m-0 min-w-full flex flex-row gap-4 justify-start items-center">
+            <div className="w-1/3"><h3 className="text-zinc-800 text-sm">{name}</h3></div>
+            <div><p className="text-zinc-600 text-xs">{proficient}</p></div>
+        </div>
+    )
+}
+
+
+// option pop up
+function OptionPopUp(props: { onEdit?: () => void, onDelete?: () => void, onAdd?: () => void }) {
+    const { onEdit, onDelete, onAdd } = props;
+    return (
+        <div className="absolute top-0 left-0 -translate-y-1/2 w-full h-8bg-opacity-50 border-none rounded-lg flex justify-center items-center gap-4">
+            {/* add section */}
+            <button className="flex justify-center items-center bg-green-800 border rounded-full p-1" onClick={onAdd}>
+                <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            {/* delete the current section */}
+            <button className="flex justify-center items-center  bg-red-500 border rounded-full p-1" onClick={onDelete}>
+                <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clip-rule="evenodd" />
+                </svg>
+
+            </button>
+
+            {/* edit the section */}
+            <button className="flex justify-center items-center  bg-gray-800 border rounded-full p-1" onClick={onEdit}>
+                <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd" />
+                    <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    );
+}
+
+// main resume template
+export default function IvyTemplate(props: templateProps = dummyData) {
+
+    const [hovered, setHovered] = useState({ field: '' });
+
+
+    return (
+        <article className="flex flex-col w-full max-w-[640px] min-h-[720px] bg-stone-100 border p-8 m-auto gap-4 items-stretch justify-stretch">
+            <div onMouseEnter={(e) => setHovered({ field: 'title' })} onMouseLeave={(e) => setHovered({ field: '' })} id="title-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <Title {...props.title}></Title>
+                {hovered.field === 'title' && <OptionPopUp />}
+            </div>
+            {/* summary section */}
+            <div onMouseEnter={(e) => setHovered({ field: 'summary' })} onMouseLeave={(e) => setHovered({ field: '' })} id="summary-container" className="relative mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Summary</h1>
+                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{props.summary}</p>
+
+                {hovered.field === 'summary' && <OptionPopUp />}
+            </div>
+
+            {/* skills section */}
+            <div onMouseEnter={(e) => setHovered({ field: 'skills' })} onMouseLeave={(e) => setHovered({ field: '' })} id="skills-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Skills</h1>
+                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{props.skills.join(', ')}</p>
+
+                {hovered.field === 'skills' && <OptionPopUp />}
+            </div>
+
+            {/* experience section */}
+            <div onMouseEnter={(e) => setHovered({ field: 'experiences' })} onMouseLeave={(e) => setHovered({ field: '' })} id="experience-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Experience</h1>
+                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
+                    {props.experiences.map((expr, idx) => {
+                        return (
+                            <li key={idx} className="p-0 m-0"><Experience {...expr} /></li>
+                        );
+                    })}
+                </ul>
+                {hovered.field === 'experiences' && <OptionPopUp />}
+            </div>
+
+            {/* project section */}
+            {props.projects && <div onMouseEnter={(e) => setHovered({ field: 'projects' })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Projects</h1>
+                <ul className="flex flex-col list-none p-0 m-0 gap-4">
+                    {props.projects.map((project, idx) => {
+                        return (
+                            <li key={idx} className="p-0 m-0"><Project {...project} /></li>
+                        );
+                    })}
+                </ul>
+                {hovered.field === 'projects' && <OptionPopUp />}
+            </div>
+            }
+
+            {/* education section */}
+            {props.education && <div onMouseEnter={(e) => setHovered({ field: 'education' })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Education</h1>
+                <ul className="flex flex-col list-none p-0 m-0 gap-4">
+                    {props.education.map((edu, idx) => {
+                        return (
+                            <li key={idx} className="p-0 m-0"><Education {...edu} /></li>
+                        );
+                    })}
+                </ul>
+                {hovered.field === 'education' && <OptionPopUp />}
+            </div>}
+
+
+            {/* certificate section */}
+            {props.certificates && <div onMouseEnter={(e) => setHovered({ field: 'certificate' })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Certificate</h1>
+                <ul className="flex flex-col list-none p-0 m-0 gap-4">
+                    {props.certificates.map((certificate, idx) => {
+                        return (
+                            <li key={idx} className="p-0 m-0"><Certificate {...certificate} /></li>
+                        );
+                    })}
+                </ul>
+                {hovered.field === 'certificate' && <OptionPopUp />}
+            </div>
+            }
+
+            {/* language section */}
+            <div onMouseEnter={(e) => setHovered({ field: 'languages' })} onMouseLeave={(e) => setHovered({ field: '' })} id="languages-container" className="relative mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Languages</h1>
+                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
+                    {props.languages.map((lang, idx) => {
+                        return (
+                            <li key={idx} className="p-0 m-0"><Language {...lang} /></li>
+                        );
+                    })}
+                </ul>
+
+                {hovered.field === 'languages' && <OptionPopUp />}
+            </div>
+
+        </article>
+    )
+}
