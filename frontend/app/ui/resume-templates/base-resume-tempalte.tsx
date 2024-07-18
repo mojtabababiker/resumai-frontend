@@ -296,72 +296,87 @@ export default function IvyTemplate(props: templateProps = dummyData) {
             </div>
 
             {/* experience section */}
-            <div onMouseEnter={(e) => setHovered({ field: 'experiences' })} onMouseLeave={(e) => setHovered({ field: '' })} id="experience-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+            <div id="experience-container" className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Experience</h1>
                 <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
                     {props.experiences.map((expr, idx) => {
                         return (
-                            <li key={idx} className="p-0 m-0"><Experience {...expr} /></li>
+                            <li onMouseEnter={(e) => setHovered({ field: `experiences-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                <Experience {...expr} />
+                                {hovered.field === `experiences-${idx}` && <OptionPopUp />}
+                            </li>
                         );
                     })}
                 </ul>
-                {hovered.field === 'experiences' && <OptionPopUp />}
+                {/* {hovered.field === 'experiences' && <OptionPopUp />} */}
             </div>
 
             {/* project section */}
-            {props.projects && <div onMouseEnter={(e) => setHovered({ field: 'projects' })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+            {props.projects && <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Projects</h1>
-                <ul className="flex flex-col list-none p-0 m-0 gap-4">
+                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
                     {props.projects.map((project, idx) => {
                         return (
-                            <li key={idx} className="p-0 m-0"><Project {...project} /></li>
+                            <li onMouseEnter={(e) => setHovered({ field: `project-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                <Project {...project} />
+                                {hovered.field === `project-${idx}` && <OptionPopUp />}
+                            </li>
                         );
                     })}
                 </ul>
-                {hovered.field === 'projects' && <OptionPopUp />}
+                {/* {hovered.field === 'projects' && <OptionPopUp />} */}
             </div>
             }
 
             {/* education section */}
-            {props.education && <div onMouseEnter={(e) => setHovered({ field: 'education' })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+            {props.education && <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Education</h1>
-                <ul className="flex flex-col list-none p-0 m-0 gap-4">
+                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
                     {props.education.map((edu, idx) => {
                         return (
-                            <li key={idx} className="p-0 m-0"><Education {...edu} /></li>
+                            <li onMouseEnter={(e) => setHovered({ field: `education-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                <Education {...edu} />
+                                {hovered.field === `education-${idx}` && <OptionPopUp />}
+                            </li>
                         );
                     })}
                 </ul>
-                {hovered.field === 'education' && <OptionPopUp />}
+                {/* {hovered.field === 'education' && <OptionPopUp />} */}
             </div>}
 
 
             {/* certificate section */}
-            {props.certificates && <div onMouseEnter={(e) => setHovered({ field: 'certificate' })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+            {props.certificates && <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Certificate</h1>
                 <ul className="flex flex-col list-none p-0 m-0 gap-4">
                     {props.certificates.map((certificate, idx) => {
                         return (
-                            <li key={idx} className="p-0 m-0"><Certificate {...certificate} /></li>
+                            <li key={idx} onMouseEnter={(e) => setHovered({ field: `certificate-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                <Certificate {...certificate} />
+                                {hovered.field === `certificate-${idx}` && <OptionPopUp />}
+                            </li>
                         );
                     })}
                 </ul>
-                {hovered.field === 'certificate' && <OptionPopUp />}
+                {/* {hovered.field === 'certificate' && <OptionPopUp />} */}
             </div>
             }
 
             {/* language section */}
-            <div onMouseEnter={(e) => setHovered({ field: 'languages' })} onMouseLeave={(e) => setHovered({ field: '' })} id="languages-container" className="relative mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+            <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Languages</h1>
                 <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
                     {props.languages.map((lang, idx) => {
                         return (
-                            <li key={idx} className="p-0 m-0"><Language {...lang} /></li>
+                            <li key={idx} onMouseEnter={(e) => setHovered({ field: `language-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                <Language {...lang} />
+                                {hovered.field === `language-${idx}` && <OptionPopUp />}
+                            </li>
                         );
                     })}
                 </ul>
 
-                {hovered.field === 'languages' && <OptionPopUp />}
+                {/* {hovered.field === 'languages' && <OptionPopUp />} */}
             </div>
 
         </article>
