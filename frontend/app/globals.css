@@ -9,13 +9,37 @@
   --background-end-rgb: 245, 245, 245;
   --primary-rgb: 80, 61, 153; 
   --primary-light-rgba: 107, 95, 171, 1;
+  
 }
 
 body {
   color: rgb(var(--primary-rgb));
   background: rgb(var(--background-start-rgb));
+  /* For WebKit-based browsers */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* For Internet Explorer */
+  -ms-scrollbar-style: none;
+  
+  /* For Firefox */
+  ::-moz-scrollbar {
+    width: 0;
+    height: 0;
+    background-color: transparent;
+  }
+  
+  /* Additional styling */
+  overflow-y: auto; /* enable vertical scrolling */
+  padding: 20px; /* add some padding for layout purposes */
 }
 
+/* body {
+  color: rgb(var(--primary-rgb));
+  background: rgb(var(--background-start-rgb));
+}
+ */
 
 @layer utilities {
   .text-balance {

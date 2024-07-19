@@ -7,6 +7,7 @@ import * as templates from "@/app/ui/resume-templates/templates";
 import { useUser } from "@/app/utils/auth";
 import { BaseSyntheticEvent, useState } from "react";
 import { addResume } from "@/app/utils/resumes-client";
+import { AlertResumeCreated } from "@/app/ui/alerts";
 
 /////////////////////////////
 //
@@ -135,6 +136,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
 
     const [activeTab, setActiveTab] = useState({ btn_id: 'desc-section-btn', tab_id: 'desc-section' });
     const [insertJobDesc, setInsertJobDesc] = useState(false);
+    const [showModal, setShowModal] = useState({ modalType: '' })
 
     // template fields states
     const [title, setTitle] = useState(dummyData.title);
@@ -149,6 +151,10 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
 
     const handleTabDisplay = (event: BaseSyntheticEvent) => {
         setActiveTab({ btn_id: event.target.id, tab_id: event.target.getAttribute('itemID') });
+    }
+
+    const closeModal = () => {
+        setShowModal({ modalType: '' });
     }
 
     const user = useUser();
@@ -179,6 +185,8 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         try {
             const res = await addResume(resumeObj);
             console.log(res);
+            setShowModal({ modalType: 'success-modal' });
+
         } catch (error) {
             console.log(`Error====>${error}`);
         }
@@ -186,64 +194,69 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
 
     if (templateId.toLowerCase() === 'ivy-template') {
         return (
-            <main className='relative w-full max-w-screen-xl overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-20 md:mt-5'>
+            <>
+                <div className='w-svw fixed top-0 left-0 bottom-0 bg-cover bg-no-repeat bg-[url("/bg-1.jpg")] overflow-x-hidden'>
+                </div>
+                <main className='relative w-full max-w-screen-xl overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-20 md:mt-5'>
 
-                <section className="w-full sticky top-0 z-30 max-w-screen-xl pb-32 bg-[rgb(var(--background-start-rgb))] ">
-                    <DashboardNavBar user={user.user} ></DashboardNavBar>
+                    <section className="w-full sticky top-0 z-30 max-w-screen-xl pb-32 bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
+                        <DashboardNavBar user={user.user} ></DashboardNavBar>
 
-                </section>
-                <section className="mt-10 md:mt-0 w-full">
-                    <div className="sticky top-20 z-30 w-full flex items-center justify-center md:justify-end gap-4 border-b mb-4 bg-[rgb(var(--background-start-rgb))]">
-                        <ButtonOutLine className="border-b border-[rgb(var(--primary-rgb))] rounded-none">Download</ButtonOutLine>
-                        <ButtonOutLine className="border-b border-[rgb(var(--primary-rgb))] rounded-none">Clear</ButtonOutLine>
-                        <ButtonSolid onClick={saveResume} className="w-32">Save</ButtonSolid>
-                    </div>
-                    <div className="relative w-full flex items-stretch justify-between gap-4 mb-4">
-                        <div className="w-full md:w-1/2 ">
-                            <templates.Ivy
-                                {
-                                ...{
-                                    title, setTitle, summary, setSummary, skills, setSkills, experiences, setExperiences,
-                                    education, setEducation, projects, setProjects, certificates, setCertificates, languages, setLanguages,
-                                }
-                                }>
-                            </templates.Ivy>
+                    </section>
+                    <section className="mt-10 md:mt-0 w-full">
+                        <div className="sticky top-20 z-30 w-full flex items-center justify-center md:justify-end gap-4 mb-4 bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
+                            <ButtonOutLine className="border-b border-[rgb(var(--background-start-rgb))] rounded-none text-gray-200">Download</ButtonOutLine>
+                            <ButtonOutLine className="border-b border-[rgb(var(--background-start-rgb))] rounded-none text-gray-200">Clear</ButtonOutLine>
+                            <ButtonSolid onClick={saveResume} className="w-32">Save</ButtonSolid>
                         </div>
-                        <ButtonSolid className="w-8 flex flex-col items-start justify-start md:hidden pl-0 pr-0 py-0">
-                            <span className="sr-only">Open sidebar</span>
-                            <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-                            </svg>
-                        </ButtonSolid>
-                        <aside id="default-sidebar" className="sticky hidden md:block top-32 right-0 z-10 w-80 md:w-1/2 lg:w-1/3 h-screen border-0 rounded-xl transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-                            <div className="h-full px-3 py-4 border-0 rounded-xl bg-[rgba(var(--primary-light-rgba))]">
-                                {/* navigation section */}
-                                <section className='min-w-full mb-20 flex flex-col gap-y-10 justify-stretch overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
-                                    <div className='flex justify-start gap-3 overflow-hidden'>
-                                        <button className={`${buttonCssClass} ${activeTab.btn_id === 'recent-tab-btn' && 'border-b border-[rgb(var(--background-start-rgb))] border-opacity-60'}`} id='desc-section-btn' itemID='desc-section' onClick={handleTabDisplay}>Add job Description</button>
-                                        <button className={`${buttonCssClass} ${activeTab.btn_id === 'all-tab-btn' && 'border-b border-[rgb(var( --background-start-rgb)] border-opacity-60'}`} id='insg-section-btn' itemID='insg-section' onClick={handleTabDisplay}>insights & Scores</button>
-                                    </div>
-                                </section>
-
-                                {/* adding job description section */}
-                                {activeTab.tab_id == 'desc-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
-                                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))]">Getting the job description by the link</label>
-                                    <input type="text" id="name" className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
-
-                                    <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
-                                    <textarea rows={7} id="name" className={`w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
-
-                                    <ButtonSolid className="w-1/2">Generate</ButtonSolid>
-                                </section>}
-
-                                {/* insights and scores section */}
-                                {activeTab.tab_id == 'insg-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
-                                </section>}
+                        <div className="relative w-full flex items-stretch justify-between gap-4 mb-4">
+                            <div className="w-full md:w-1/2 ">
+                                <templates.Ivy
+                                    {
+                                    ...{
+                                        title, setTitle, summary, setSummary, skills, setSkills, experiences, setExperiences,
+                                        education, setEducation, projects, setProjects, certificates, setCertificates, languages, setLanguages,
+                                    }
+                                    }>
+                                </templates.Ivy>
                             </div>
-                        </aside>
-                    </div>
-                </section>
-            </main>
+                            <ButtonSolid className="w-8 flex flex-col items-start justify-start md:hidden pl-0 pr-0 py-0">
+                                <span className="sr-only">Open sidebar</span>
+                                <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+                                </svg>
+                            </ButtonSolid>
+                            <aside id="default-sidebar" className="sticky hidden md:block top-36 right-0 z-10 w-80 md:w-1/2 lg:w-1/3 h-screen border-0 rounded-xl transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+                                <div className="h-full px-3 py-4 border-0 rounded-xl bg-[rgba(var(--primary-light-rgba))]">
+                                    {/* navigation section */}
+                                    <section className='min-w-full mb-20 flex flex-col gap-y-10 justify-stretch overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
+                                        <div className='flex justify-start gap-3 overflow-hidden'>
+                                            <button className={`${buttonCssClass} ${activeTab.btn_id === 'recent-tab-btn' && 'border-b border-[rgb(var(--background-start-rgb))] border-opacity-60'}`} id='desc-section-btn' itemID='desc-section' onClick={handleTabDisplay}>Add job Description</button>
+                                            <button className={`${buttonCssClass} ${activeTab.btn_id === 'all-tab-btn' && 'border-b border-[rgb(var( --background-start-rgb)] border-opacity-60'}`} id='insg-section-btn' itemID='insg-section' onClick={handleTabDisplay}>insights & Scores</button>
+                                        </div>
+                                    </section>
+
+                                    {/* adding job description section */}
+                                    {activeTab.tab_id == 'desc-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
+                                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))]">Getting the job description by the link</label>
+                                        <input type="text" id="name" className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
+
+                                        <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
+                                        <textarea rows={7} id="name" className={`w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
+
+                                        <ButtonSolid className="w-1/2">Generate</ButtonSolid>
+                                    </section>}
+
+                                    {/* insights and scores section */}
+                                    {activeTab.tab_id == 'insg-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
+                                    </section>}
+                                </div>
+                            </aside>
+                        </div>
+                    </section>
+                    {showModal.modalType === 'success-modal' && <AlertResumeCreated closeModel={closeModal} />}
+                </main>
+            </>
         );
     }
 }
