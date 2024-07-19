@@ -27,7 +27,7 @@ export function EditTitle(
                             <label htmlFor="linkUrl" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))]">Link URL</label>
                             <input type="text" id="linkUrl" className="p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" value={link.linkUrl} required />
                             <label htmlFor="linkType" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))]">Link Type</label>
-                            <input type="text" id="linkType" className="p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" value={link.linkType} required />
+                            <input type="text" id="linkType" className="p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" value={link.type} required />
                             <button className="flex justify-center items-center  bg-red-500 border rounded-full p-1" onClick={() => {
                                 title.links?.splice(index, 1)
                                 setTitle({ ...title })

@@ -142,7 +142,7 @@ function Title(props: interfaces.titleProps) {
                     {links?.map((link, idx) => {
                         return (
                             <li key={`link-${idx}`} className="text-zinc-700 text-sm hover:text-sky-900">
-                                <a href={link.linkUrl} className="text-slate-600 hover:text-sky-900">{link.linkType}</a>
+                                <a href={link.linkUrl} className="text-slate-600 hover:text-sky-900">{link.type}</a>
                             </li>
                         )
                     }

@@ -6,6 +6,7 @@ import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
 import * as templates from "@/app/ui/resume-templates/templates";
 import { useUser } from "@/app/utils/auth";
 import { BaseSyntheticEvent, useState } from "react";
+import { addResume } from "@/app/utils/resumes-client";
 
 /////////////////////////////
 //
@@ -16,15 +17,15 @@ const dummyData = {
         jobTitle: "Full Stack Developer",
         links: [
             {
-                "linkType": "LinkedIn",
+                "type": "LinkedIn",
                 "linkUrl": "https://www.linkedin.com/in/emilychen"
             },
             {
-                "linkType": "GitHub",
+                "type": "GitHub",
                 "linkUrl": "https://github.com/emilychen-dev"
             },
             {
-                "linkType": "Portfolio",
+                "type": "Portfolio",
                 "linkUrl": "https://emilychen.dev"
             }
         ]
@@ -160,7 +161,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         return;
     }
 
-    const saveResume = () => {
+    const saveResume = async () => {
         const resumeObj = {
             templateId,
             title,
@@ -175,6 +176,12 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
 
         // call the api util to save the
         console.log(`Saving...\n\n${JSON.stringify(resumeObj)}\n\n`);
+        try {
+            const res = await addResume(resumeObj);
+            console.log(res);
+        } catch (error) {
+            console.log(`Error====>${error}`);
+        }
     }
 
     if (templateId.toLowerCase() === 'ivy-template') {

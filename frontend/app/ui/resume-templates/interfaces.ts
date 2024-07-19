@@ -5,7 +5,7 @@ import { ReactNode } from "react"
 // title Props
 export interface Link {
     linkUrl: string
-    linkType: string
+    type: string
 }
 export interface titleProps {
     children?: ReactNode
