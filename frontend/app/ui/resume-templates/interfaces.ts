@@ -65,3 +65,23 @@ export interface templateProps {
     certificates?: certificateProps[]
     languages: language[]
 }
+
+export interface templateFields {
+    className?: string
+    title: titleProps
+    setTitle: Function
+    summary: string
+    setSummary: Function
+    skills: string[]
+    setSkills: Function
+    experiences: experienceProps[]
+    setExperiences: Function
+    education: educationProps[]
+    setEducation: Function
+    projects: projectsProps[]
+    setProjects: Function
+    certificates: certificateProps[]
+    setCertificates: Function
+    languages: language[]
+    setLanguages: Function
+}
