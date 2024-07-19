@@ -55,6 +55,7 @@ export interface language {
 
 //template Props
 export interface templateProps {
+    className?: string
     title: titleProps
     summary: string
     skills: string[]

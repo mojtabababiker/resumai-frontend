@@ -1,12 +1,15 @@
 'use client';
+import { BaseSyntheticEvent, useState } from 'react';
+import Image from 'next/image'
 import { DashboardNavBar } from '@/app/ui/nav_bar';
 import { useUser } from '@/app/utils/auth';
-import { BaseSyntheticEvent, useState } from 'react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
     const user = useUser();
     const [activeTab, setActiveTab] = useState({ btn_id: 'recent-tab-btn', tab_id: 'recent-tab' });
     const [resumeBuild, setResumeBuild] = useState(false);
+    const [templateId, setTemplateId] = useState('');
 
     if (user.isLoading) {
         return <h1 className='text-[340px]'>Loading...</h1>;
@@ -19,6 +22,7 @@ export default function DashboardPage() {
 
     const user_name = `${user.user.first_name} ${user.user.last_name}`;
     const buttonCssClass = 'text-[rgba(var(--primary-light-rgba))] hover:text-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none text-sm px-5 py-2.5 text-center inline-flex items-center';
+    const templates = ['Ivy-template', 'Ivy-template', 'Ivy-template']
 
     const startResumeBuild = () => {
         setResumeBuild(true);
@@ -28,6 +32,7 @@ export default function DashboardPage() {
 
     const exitResumeBuild = () => {
         setResumeBuild(false);
+        setTemplateId('');
         document.getElementById('default-modal')?.classList.add('hidden');
         document.getElementById('default-modal')?.classList.remove('flex');
     }
@@ -64,9 +69,9 @@ export default function DashboardPage() {
             </section>
 
             {/* The modal for building the resume */}
-            <section id="default-modal" tabIndex={-1} aria-hidden="true" className="hidden overflow-y-auto overflow-x-hidden min-h-full h-h-full w-svw fixed top-0 right-0 z-50 justify-center items-center">
+            <section id="default-modal" tabIndex={-1} aria-hidden="true" className="hidden overflow-y-hidden overflow-x-hidden scroll-m-10 scroll-smooth min-h-full h-h-full w-svw fixed top-0 right-0 z-50 justify-center items-center">
                 <div className="relative p-4 w-full max-w-2xl max-h-full">
-                    <div className="relative bg-white rounded-lg shadow">
+                    <div className="relative bg-white rounded-lg shadow max-h-[720px]">
                         <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
                             <h3 className="text-xl font-semibold text-gray-900">
                                 Choose a template
@@ -78,11 +83,17 @@ export default function DashboardPage() {
                                 <span className="sr-only">Close modal</span>
                             </button>
                         </div>
-                        <div className="p-4 md:p-5 space-y-4">
-                            {/* templates section */}
+                        <div className="p-4 md:p-5 space-y-4 overflow-hidden">
+                            <div className='p-0 m-0 flex flex-col md:flex-row overflow-auto'>
+                                {templates.map((template, idx) => {
+                                    return <Image src={`/templates_thumbnail/${template}.png`} alt={`${template} thumbnail`} width={360} height={420}
+                                        className={`cursor-pointer border p-3 hover:scale-90 hover:drop-shadow-sm hover:filter transition-transform ease-in delay-75 ${templateId === template && 'scale-90'}`} key={`${template}-${idx}`}
+                                        onClick={(e) => { setTemplateId(template) }}></Image>
+                                })}
+                            </div>
                         </div>
-                        <div className="flex items-center p-4 md:p-5 border-t rounded-b">
-                            <button className="text-white bg-[rgba(var(--primary-light-rgba))] hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Build</button>
+                        <div className="flex items-center px-4 md:px-5 py-3 border-t rounded-b">
+                            <Link href={`/dashboard/${templateId}`} className="text-white bg-[rgba(var(--primary-light-rgba))] hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Build</Link>
                             <button onClick={exitResumeBuild} className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-[rgba(var(--primary-light-rgba))] focus:z-10 focus:ring-0">Decline</button>
                         </div>
                     </div>

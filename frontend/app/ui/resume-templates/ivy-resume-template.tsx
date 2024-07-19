@@ -3,7 +3,8 @@
 // each field will be editable and has its own customizing panel
 
 import { useState } from "react"
-import { titleProps, experienceProps, educationProps, projectsProps, certificateProps, language, templateProps } from "./interfaces"
+import * as interfaces from "./interfaces"
+import * as resumeFieldsEdits from '@/app/ui/resume-templates/resume-fields-edits'
 
 // dummy data
 const dummyData = {
@@ -125,7 +126,7 @@ const dummyData = {
 }
 
 
-function Title(props: titleProps) {
+function Title(props: interfaces.titleProps) {
     const { name, jobTitle, links, children, className } = props;
 
     return (
@@ -155,7 +156,7 @@ function Title(props: titleProps) {
 }
 
 // experience component
-function Experience(props: experienceProps) {
+function Experience(props: interfaces.experienceProps) {
     const {
         companyName, roleTitle, startingDate, endingDate, location, summary
     } = props;
@@ -178,7 +179,7 @@ function Experience(props: experienceProps) {
     )
 }
 // education component
-function Education(props: educationProps) {
+function Education(props: interfaces.educationProps) {
     const {
         schoolName, degreeTitle, startingDate, endingDate, location, summary
     } = props;
@@ -201,7 +202,7 @@ function Education(props: educationProps) {
     )
 }
 
-function Project(props: projectsProps) {
+function Project(props: interfaces.projectsProps) {
     const { title, description } = props
 
     return (
@@ -213,7 +214,7 @@ function Project(props: projectsProps) {
 }
 
 // certificate component
-function Certificate(props: certificateProps) {
+function Certificate(props: interfaces.certificateProps) {
     const { title, description } = props
 
     return (
@@ -225,7 +226,7 @@ function Certificate(props: certificateProps) {
 }
 
 // language component
-function Language(props: language) {
+function Language(props: interfaces.language) {
     const { name, proficient } = props;
 
     return (
@@ -238,18 +239,19 @@ function Language(props: language) {
 
 
 // option pop up
-function OptionPopUp(props: { onEdit?: () => void, onDelete?: () => void, onAdd?: () => void }) {
-    const { onEdit, onDelete, onAdd } = props;
+function OptionPopUp(props: { setToEdit: Function, toEdit: { field: string, index: number } }) {
+
+    const { setToEdit, toEdit } = props;
     return (
         <div className="absolute top-0 left-0 -translate-y-1/2 w-full h-8bg-opacity-50 border-none rounded-lg flex justify-center items-center gap-4">
             {/* add section */}
-            <button className="flex justify-center items-center bg-green-800 border rounded-full p-1" onClick={onAdd}>
+            <button className="flex justify-center items-center bg-green-800 border rounded-full p-1" onClick={() => console.log()}>
                 <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd" />
                 </svg>
             </button>
             {/* delete the current section */}
-            <button className="flex justify-center items-center  bg-red-500 border rounded-full p-1" onClick={onDelete}>
+            <button className="flex justify-center items-center  bg-red-500 border rounded-full p-1" onClick={() => console.log()}>
                 <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clip-rule="evenodd" />
                 </svg>
@@ -257,7 +259,7 @@ function OptionPopUp(props: { onEdit?: () => void, onDelete?: () => void, onAdd?
             </button>
 
             {/* edit the section */}
-            <button className="flex justify-center items-center  bg-gray-800 border rounded-full p-1" onClick={onEdit}>
+            <button className="flex justify-center items-center  bg-gray-800 border rounded-full p-1" onClick={() => setToEdit(toEdit)}>
                 <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd" />
                     <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd" />
@@ -268,42 +270,57 @@ function OptionPopUp(props: { onEdit?: () => void, onDelete?: () => void, onAdd?
 }
 
 // main resume template
-export default function IvyTemplate(props: templateProps = dummyData) {
+export default function IvyTemplate(props: interfaces.templateProps = dummyData) {
+
+    // move to the edit page
+
+    const [title, setTitle] = useState(dummyData.title);
+    const [summary, setSummary] = useState(dummyData.summary);
+    const [skills, setSkills] = useState(dummyData.skills);
+    const [experiences, setExperiences] = useState(dummyData.experiences);
+    const [education, setEducation] = useState(dummyData.education);
+    const [projects, setProjects] = useState(dummyData.projects);
+    const [certificates, setCertificates] = useState(dummyData.certificates);
+    const [languages, setLanguages] = useState(dummyData.languages);
+
+    const [toEdit, setToEdit] = useState({ field: '', index: -1 });
+
+    /////////////////////////////
 
     const [hovered, setHovered] = useState({ field: '' });
 
 
     return (
-        <article className="flex flex-col w-full max-w-[640px] min-h-[720px] bg-stone-100 border p-8 m-auto gap-4 items-stretch justify-stretch">
+        <article className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-stone-100 border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className}`}>
             <div onMouseEnter={(e) => setHovered({ field: 'title' })} onMouseLeave={(e) => setHovered({ field: '' })} id="title-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
-                <Title {...props.title}></Title>
-                {hovered.field === 'title' && <OptionPopUp />}
+                <Title {...title}></Title>
+                {hovered.field === 'title' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'title', index: -1 }} />}
             </div>
             {/* summary section */}
             <div onMouseEnter={(e) => setHovered({ field: 'summary' })} onMouseLeave={(e) => setHovered({ field: '' })} id="summary-container" className="relative mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Summary</h1>
-                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{props.summary}</p>
+                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{summary}</p>
 
-                {hovered.field === 'summary' && <OptionPopUp />}
+                {hovered.field === 'summary' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "summary", index: -1 }} />}
             </div>
 
             {/* skills section */}
             <div onMouseEnter={(e) => setHovered({ field: 'skills' })} onMouseLeave={(e) => setHovered({ field: '' })} id="skills-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Skills</h1>
-                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{props.skills.join(', ')}</p>
+                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{skills.join(', ')}</p>
 
-                {hovered.field === 'skills' && <OptionPopUp />}
+                {hovered.field === 'skills' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "skills", index: -1 }} />}
             </div>
 
             {/* experience section */}
             <div id="experience-container" className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Experience</h1>
                 <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {props.experiences.map((expr, idx) => {
+                    {experiences.map((expr, idx) => {
                         return (
                             <li onMouseEnter={(e) => setHovered({ field: `experiences-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
                                 <Experience {...expr} />
-                                {hovered.field === `experiences-${idx}` && <OptionPopUp />}
+                                {hovered.field === `experiences-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "experience", index: idx }} />}
                             </li>
                         );
                     })}
@@ -312,14 +329,14 @@ export default function IvyTemplate(props: templateProps = dummyData) {
             </div>
 
             {/* project section */}
-            {props.projects && <div className="relative border-0 mb-4 cursor-default">
+            {projects && <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Projects</h1>
                 <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {props.projects.map((project, idx) => {
+                    {projects.map((project, idx) => {
                         return (
                             <li onMouseEnter={(e) => setHovered({ field: `project-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
                                 <Project {...project} />
-                                {hovered.field === `project-${idx}` && <OptionPopUp />}
+                                {hovered.field === `project-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'project', index: idx }} />}
                             </li>
                         );
                     })}
@@ -329,14 +346,14 @@ export default function IvyTemplate(props: templateProps = dummyData) {
             }
 
             {/* education section */}
-            {props.education && <div className="relative border-0 mb-4 cursor-default">
+            {education && <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Education</h1>
                 <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {props.education.map((edu, idx) => {
+                    {education.map((edu, idx) => {
                         return (
                             <li onMouseEnter={(e) => setHovered({ field: `education-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
                                 <Education {...edu} />
-                                {hovered.field === `education-${idx}` && <OptionPopUp />}
+                                {hovered.field === `education-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "education", index: idx }} />}
                             </li>
                         );
                     })}
@@ -346,14 +363,14 @@ export default function IvyTemplate(props: templateProps = dummyData) {
 
 
             {/* certificate section */}
-            {props.certificates && <div className="relative border-0 mb-4 cursor-default">
+            {certificates && <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Certificate</h1>
                 <ul className="flex flex-col list-none p-0 m-0 gap-4">
-                    {props.certificates.map((certificate, idx) => {
+                    {certificates.map((certificate, idx) => {
                         return (
                             <li key={idx} onMouseEnter={(e) => setHovered({ field: `certificate-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
                                 <Certificate {...certificate} />
-                                {hovered.field === `certificate-${idx}` && <OptionPopUp />}
+                                {hovered.field === `certificate-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'certificate', index: idx }} />}
                             </li>
                         );
                     })}
@@ -366,11 +383,11 @@ export default function IvyTemplate(props: templateProps = dummyData) {
             <div className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Languages</h1>
                 <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {props.languages.map((lang, idx) => {
+                    {languages.map((lang, idx) => {
                         return (
-                            <li key={idx} onMouseEnter={(e) => setHovered({ field: `language-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                            <li key={idx} onMouseEnter={(e) => setHovered({ field: `language-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-1 hover:border hover:drop-shadow-sm">
                                 <Language {...lang} />
-                                {hovered.field === `language-${idx}` && <OptionPopUp />}
+                                {hovered.field === `language-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'language', index: idx }} />}
                             </li>
                         );
                     })}
@@ -379,6 +396,15 @@ export default function IvyTemplate(props: templateProps = dummyData) {
                 {/* {hovered.field === 'languages' && <OptionPopUp />} */}
             </div>
 
-        </article>
+
+            {toEdit.field === 'title' && <resumeFieldsEdits.EditTitle title={title} setTitle={setTitle} setToEdit={setToEdit} />}
+            {toEdit.field === 'summary' && <resumeFieldsEdits.EditSummary summary={summary} setSummary={setSummary} setToEdit={setToEdit}></resumeFieldsEdits.EditSummary>}
+            {toEdit.field === 'skills' && <resumeFieldsEdits.EditSkills skills={skills} setSkills={setSkills} setToEdit={setToEdit}></resumeFieldsEdits.EditSkills>}
+            {toEdit.field === 'experience' && <resumeFieldsEdits.EditExperience experiences={experiences} experience_idx={toEdit.index} setExperiences={setExperiences} setToEdit={setToEdit}></resumeFieldsEdits.EditExperience>}
+            {toEdit.field === 'project' && <resumeFieldsEdits.EditProject projects={projects} project_idx={toEdit.index} setProjects={setProjects} setToEdit={setToEdit}></resumeFieldsEdits.EditProject>}
+            {toEdit.field === 'education' && <resumeFieldsEdits.EditEducation educations={education} education_idx={toEdit.index} setEducations={setEducation} setToEdit={setToEdit}></resumeFieldsEdits.EditEducation>}
+            {toEdit.field === 'certificate' && <resumeFieldsEdits.EditCertificate certificates={certificates} certificate_idx={toEdit.index} setCertificates={setCertificates} setToEdit={setToEdit}></resumeFieldsEdits.EditCertificate>}
+            {/* {toEdit.field === 'language' && <EditLanguage />} */}
+        </article >
     )
 }
