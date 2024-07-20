@@ -16,7 +16,7 @@ export interface Resume {
  * a utility that interact with the backend API to create a new resume for the current logged in user
  * @param resumeObj the json string that represent the resume fields data
  */
-export async function addResume(resumeObj: object): Promise<{data: string, message: string}> {
+export async function addResume(resumeObj: object, toUpdate?:boolean): Promise<{data: string, message: string}> {
 
     const tokenObj = localStorage.getItem('auth-token');
 
@@ -24,16 +24,21 @@ export async function addResume(resumeObj: object): Promise<{data: string, messa
     if (!token) {
         throw new Error('Session ended, Login required');
     }
-
+    const {_id, ...resume} = resumeObj;
     const res = await globalFetcher(
         {
-            url:'/resumes',
-            method: 'post',
+            url:`/resumes/${toUpdate && _id}`,
+            method: toUpdate ? 'put' : 'post',
             token: token,
-            bodyData: JSON.stringify(resumeObj),
+            bodyData: toUpdate ? JSON.stringify({data: resume}) : JSON.stringify(resume),
         }
     );
     return {data: res, message: 'Resume Saved successfully'};
+}
+
+export async function updateResume(resumeObj: object): Promise<{data: string, message: string}> {
+    const res = await addResume(resumeObj, true);
+    return res;
 }
 
 export async function getUserResumes(): Promise<{recent:Resume[], all: Resume[]}> {

@@ -49,7 +49,10 @@ export default function DashboardPage() {
         event.stopPropagation();
         // call the resume crafting page /dashboard/[resume.templateId] passing the resume.data to it
         console.log(resume.templateId);
-        console.log(resume.data);
+        localStorage.removeItem('toEditResume');
+        localStorage.setItem('toEditResume', JSON.stringify({ templateId: resume.templateId, resumeId: resume._id, ...resume.data }));
+        window.location.href = `/dashboard/${resume.templateId}`;
+        // console.log(resume.data);
     }
 
     const deleteResume = (resumeId: string, event: BaseSyntheticEvent) => {

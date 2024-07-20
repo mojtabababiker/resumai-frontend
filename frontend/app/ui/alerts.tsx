@@ -17,7 +17,7 @@ export const AlertWrongCredentials = ({ message }: { message: string }) => {
 }
 
 // Alert successful resume creation
-export const AlertResumeCreated = ({ closeModel }: { closeModel: MouseEventHandler }) => {
+export const AlertResumeCreated = ({ closeModel, message }: { closeModel: MouseEventHandler, message: string }) => {
     return (
         <div id="popup-modal" tabIndex={-1} className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div className="relative p-4 w-full max-w-md max-h-full border-0 rounded-lg">
@@ -32,7 +32,7 @@ export const AlertResumeCreated = ({ closeModel }: { closeModel: MouseEventHandl
                         <svg className="mx-auto mb-4 w-12 h-12 text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
-                        <h3 className="mb-5 text-lg font-normal text-gray-200">Resume created successfully</h3>
+                        <h3 className="mb-5 text-lg font-normal text-gray-200">{message}</h3>
                         <Link href={'/dashboard'} type="button" className="text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                             Back Home
                         </Link>

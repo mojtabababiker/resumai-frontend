@@ -6,7 +6,7 @@ import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
 import * as templates from "@/app/ui/resume-templates/templates";
 import { useUser } from "@/app/utils/auth";
 import { BaseSyntheticEvent, useState } from "react";
-import { addResume } from "@/app/utils/resumes-client";
+import { addResume, updateResume } from "@/app/utils/resumes-client";
 import { AlertResumeCreated } from "@/app/ui/alerts";
 
 /////////////////////////////
@@ -131,22 +131,28 @@ const dummyData = {
 /////////////////////////////
 
 export default function ResumeDraftPage({ params }: { params: { id: string } }) {
+    let ResumeData = dummyData;
+    const resume = localStorage.getItem('toEditResume');
     const templateId = params.id;
     const buttonCssClass = 'text-[rgb(var(--background-start-rgb))] hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
 
     const [activeTab, setActiveTab] = useState({ btn_id: 'desc-section-btn', tab_id: 'desc-section' });
     const [insertJobDesc, setInsertJobDesc] = useState(false);
-    const [showModal, setShowModal] = useState({ modalType: '' })
+    const [showModal, setShowModal] = useState({ modalType: '', message: '' });
 
+    if (resume) {
+        ResumeData = JSON.parse(resume);
+        // console.log(`Resume Data ===> ${ResumeData}`);
+    }
     // template fields states
-    const [title, setTitle] = useState(dummyData.title);
-    const [summary, setSummary] = useState(dummyData.summary);
-    const [skills, setSkills] = useState(dummyData.skills);
-    const [experiences, setExperiences] = useState(dummyData.experiences);
-    const [education, setEducation] = useState(dummyData.education);
-    const [projects, setProjects] = useState(dummyData.projects);
-    const [certificates, setCertificates] = useState(dummyData.certificates);
-    const [languages, setLanguages] = useState(dummyData.languages);
+    const [title, setTitle] = useState(ResumeData.title);
+    const [summary, setSummary] = useState(ResumeData.summary);
+    const [skills, setSkills] = useState(ResumeData.skills);
+    const [experiences, setExperiences] = useState(ResumeData.experiences);
+    const [education, setEducation] = useState(ResumeData.education);
+    const [projects, setProjects] = useState(ResumeData.projects);
+    const [certificates, setCertificates] = useState(ResumeData.certificates);
+    const [languages, setLanguages] = useState(ResumeData.languages);
 
 
     const handleTabDisplay = (event: BaseSyntheticEvent) => {
@@ -154,7 +160,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     }
 
     const closeModal = () => {
-        setShowModal({ modalType: '' });
+        setShowModal({ modalType: '', message: '' });
     }
 
     const user = useUser();
@@ -183,12 +189,19 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         // call the api util to save the
         console.log(`Saving...\n\n${JSON.stringify(resumeObj)}\n\n`);
         try {
-            const res = await addResume(resumeObj);
-            console.log(res);
-            setShowModal({ modalType: 'success-modal' });
+            if (ResumeData.resumeId) {
+                const res = await updateResume({ _id: ResumeData.resumeId, ...resumeObj });
+                console.log(res);
+                setShowModal({ modalType: 'success-modal', message: 'Resume Updated successfully...' });
+            } else {
+                const res = await addResume(resumeObj);
+                console.log(res);
+                setShowModal({ modalType: 'success-modal', message: 'Resume Created successfully...' });
+            }
 
         } catch (error) {
             console.log(`Error====>${error}`);
+            setShowModal({ modalType: 'success-modal', message: 'Nothing to updated...' });
         }
     }
 
@@ -254,7 +267,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                             </aside>
                         </div>
                     </section>
-                    {showModal.modalType === 'success-modal' && <AlertResumeCreated closeModel={closeModal} />}
+                    {showModal.modalType === 'success-modal' && <AlertResumeCreated closeModel={closeModal} message={showModal.message} />}
                 </main>
             </>
         );
