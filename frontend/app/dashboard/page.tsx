@@ -4,15 +4,18 @@ import Image from 'next/image'
 import { DashboardNavBar } from '@/app/ui/nav_bar';
 import { useUser } from '@/app/utils/auth';
 import Link from 'next/link';
-import { getUserResumes, Resume } from '../utils/resumes-client';
+import * as resumesClient from '../utils/resumes-client';
 import { templateProps } from '../ui/resume-templates/interfaces';
+import { AlertResumeDelete } from '../ui/alerts';
 
 export default function DashboardPage() {
     const user = useUser();
-    const [userResumes, setUserResumes]: [{ recent: Resume[], all: Resume[] }, Function] = useState({ recent: [], all: [] });
+    const [userResumes, setUserResumes]: [{ recent: resumesClient.Resume[], all: resumesClient.Resume[] }, Function] = useState({ recent: [], all: [] });
     const [resumesNotFetched, setResumesNotFetched] = useState(true);
     const [activeTab, setActiveTab] = useState({ btn_id: 'recent-tab-btn', tab_id: 'recent-tab' });
     const [resumeBuild, setResumeBuild] = useState(false);
+    const [showModal, setShowModal] = useState({ modalType: '', message: '', toDelete: '' });
+    const [confirmDel, setConfirmDel] = useState(false);
     const [templateId, setTemplateId] = useState('');
 
     if (user.isLoading) {
@@ -45,7 +48,7 @@ export default function DashboardPage() {
         setActiveTab({ btn_id: event.target.id, tab_id: event.target.getAttribute('itemID') });
     }
 
-    const editResume = (resume: Resume, event: BaseSyntheticEvent) => {
+    const editResume = (resume: resumesClient.Resume, event: BaseSyntheticEvent) => {
         event.stopPropagation();
         // call the resume crafting page /dashboard/[resume.templateId] passing the resume.data to it
         console.log(resume.templateId);
@@ -55,14 +58,25 @@ export default function DashboardPage() {
         // console.log(resume.data);
     }
 
-    const deleteResume = (resumeId: string, event: BaseSyntheticEvent) => {
+    const handleDelete = (event: BaseSyntheticEvent, resumeId: string) => {
         event.stopPropagation();
-        // ask the user to confirm their choice to delete
-        // call the resume api client to delete the resume with id resumeId
-        console.log(resumeId);
+        setShowModal({ modalType: "confirm-del", message: 'Deleting the resuming will remove it permanently !!', toDelete: resumeId });
     }
 
-    const downloadResume = (resume: Resume, event: BaseSyntheticEvent) => {
+    const deleteResume = async (resumeId: string) => {
+        console.log(`\n\nDeleting... ${resumeId}\n\n`);
+        // call the resume api client to delete the resume with id resumeId
+        try {
+            const res = await resumesClient.deleteResume(resumeId);
+            await fetchUserResumes();
+
+        } catch (error) {
+            console.log(error);
+            // if auth error redirect the user to login
+        }
+    }
+
+    const downloadResume = (resume: resumesClient.Resume, event: BaseSyntheticEvent) => {
         event.stopPropagation();
         // use the j2pdf and html2canvas to convert the resume template into a pdf
         // download the pdf file name it as <user-full-name-resume>.pdf
@@ -71,7 +85,7 @@ export default function DashboardPage() {
 
     const fetchUserResumes = async () => {
         try {
-            const resumes = await getUserResumes();
+            const resumes = await resumesClient.getUserResumes();
             setUserResumes(resumes);
             // alert(Object.entries(resumes.at(1)));
         } catch (error) {
@@ -129,7 +143,7 @@ export default function DashboardPage() {
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                                         </svg>
                                     </button>
-                                    <button onClick={(event) => deleteResume(resume._id, event)} className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                                    <button onClick={(event) => handleDelete(event, resume._id)} className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
                                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                         </svg>
@@ -165,7 +179,7 @@ export default function DashboardPage() {
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                                         </svg>
                                     </button>
-                                    <button onClick={(event) => deleteResume(resume._id, event)} className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                                    <button onClick={(event) => handleDelete(event, resume._id)} className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
                                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                         </svg>
@@ -216,6 +230,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
             </section>
+            {showModal.modalType === 'confirm-del' && <AlertResumeDelete closeModel={(event) => setShowModal({ modalType: '', message: '', toDelete: '' })} message={showModal.message} confirm={deleteResume} toDelete={showModal.toDelete} />}
         </main >
     );
 }

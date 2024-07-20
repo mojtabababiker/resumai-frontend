@@ -41,6 +41,25 @@ export async function updateResume(resumeObj: object): Promise<{data: string, me
     return res;
 }
 
+export async function deleteResume(resumeId: string): Promise<any> {
+    const tokenObj = localStorage.getItem('auth-token');
+    const token = tokenObj ? JSON.parse(tokenObj) : null;
+
+    if (!token) {
+        throw new Error('Session ended, Login required');
+    }
+
+    const res = await globalFetcher(
+        {
+            url: `/resumes?resume_id=${resumeId}`,
+            method: 'delete',
+            token: token,
+        }
+    );
+
+    return res;
+}
+
 export async function getUserResumes(): Promise<{recent:Resume[], all: Resume[]}> {
     const tokenObj = localStorage.getItem('auth-token');
     const token = tokenObj ? JSON.parse(tokenObj) : null;
