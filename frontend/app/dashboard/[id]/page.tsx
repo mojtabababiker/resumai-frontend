@@ -210,19 +210,19 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
             <>
                 <div className='w-svw fixed top-0 left-0 bottom-0 bg-cover bg-no-repeat bg-[url("/bg-1.jpg")] overflow-x-hidden'>
                 </div>
-                <main className='relative w-full max-w-screen-xl overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-20 md:mt-5'>
+                <main className='relative w-full max-w-screen-xl h-svh overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-16 md:mt-5 bg-[rgb(var(--background-start-rgb))]'>
 
-                    <section className="w-full sticky top-0 z-30 max-w-screen-xl pb-32 bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
-                        <DashboardNavBar user={user.user} ></DashboardNavBar>
+                    <DashboardNavBar user={user.user} ></DashboardNavBar>
+                    <section className="w-full min-w-[1280px] sticky top-0 z-10 max-w-screen-xl pb-32 bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
 
                     </section>
-                    <section className="mt-10 md:mt-0 w-full">
-                        <div className="sticky top-20 z-30 w-full flex items-center justify-center md:justify-end gap-4 mb-4 bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
-                            <ButtonOutLine className="border-b border-[rgb(var(--background-start-rgb))] rounded-none text-gray-200">Download</ButtonOutLine>
-                            <ButtonOutLine className="border-b border-[rgb(var(--background-start-rgb))] rounded-none text-gray-200">Clear</ButtonOutLine>
-                            <ButtonSolid onClick={saveResume} className="w-32">Save</ButtonSolid>
+                    <section className="mt-10 md:mt-4 w-full px-10">
+                        <div className="sticky top-20 z-30 w-full flex items-center justify-center md:justify-end gap-4 mb-4 sbg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
+                            <ButtonOutLine className="border-[rgb(var(--background-start-rgb))] text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))]">Download</ButtonOutLine>
+                            <ButtonOutLine className="border-[rgb(var(--background-start-rgb))] text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))]">Clear</ButtonOutLine>
+                            <ButtonSolid onClick={saveResume} className="w-32 bg-[rgba(var(--primary-light-rgba))]">Save</ButtonSolid>
                         </div>
-                        <div className="relative w-full flex items-stretch justify-between gap-4 mb-4">
+                        <div className="w-full flex items-stretch justify-between gap-4 mb-4">
                             <div className="w-full md:w-1/2 ">
                                 <templates.Ivy
                                     {
@@ -239,7 +239,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                                 </svg>
                             </ButtonSolid>
-                            <aside id="default-sidebar" className="sticky hidden md:block top-36 right-0 z-10 w-80 md:w-1/2 lg:w-1/3 h-screen border-0 rounded-xl transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+                            <aside id="default-sidebar" className="sticky hidden md:block top-36 right-0 w-80 md:w-1/2 lg:w-1/3 h-screen border-0 rounded-xl transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
                                 <div className="h-full px-3 py-4 border-0 rounded-xl bg-[rgba(var(--primary-light-rgba))]">
                                     {/* navigation section */}
                                     <section className='min-w-full mb-20 flex flex-col gap-y-10 justify-stretch overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
