@@ -6,12 +6,13 @@ import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
 import * as templates from "@/app/ui/resume-templates/templates";
 import { useUser } from "@/app/utils/auth";
 import { BaseSyntheticEvent, useState } from "react";
-import { addResume, updateResume } from "@/app/utils/resumes-client";
+import { addResume, enhanceResume, updateResume } from "@/app/utils/resumes-client";
 import { AlertResumeCreated } from "@/app/ui/alerts";
+import { templateProps } from "@/app/ui/resume-templates/interfaces";
 
 /////////////////////////////
 //
-const dummyData = {
+const dummyData: templateProps = {
     templateId: "abcd1234",
     title: {
         name: "Emily Chen",
@@ -189,7 +190,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         }
 
         // call the api util to save the
-        console.log(`Saving...\n\n${JSON.stringify(resumeObj)}\n\n`);
+        // console.log(`Saving...\n\n${JSON.stringify(resumeObj)}\n\n`);
         try {
             if (ResumeData.resumeId) {
                 const res = await updateResume({ _id: ResumeData.resumeId, ...resumeObj });
@@ -215,9 +216,30 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         // else call the generate enhanced resume api, providing both jobUrl and jobDescription
         console.log(jobUrl);
         console.log(jobDescription);
+        const { templateId, ...resumeToUpdate } = ResumeData
+        try {
+            const enhancedResume = await enhanceResume(resumeToUpdate, jobUrl, jobDescription);
+            console.log(JSON.stringify(enhancedResume.scoring_insights));
+            ResumeData = { templateId, ...enhancedResume.resume_data };
+            setTitle(ResumeData.title);
+            setSummary(ResumeData.summary);
+            setSkills(ResumeData.skills);
+            setExperiences(ResumeData.experiences);
+            setEducation(ResumeData.education);
+            setProjects(ResumeData.projects);
+            setCertificates(ResumeData.certificates);
+            setLanguages(ResumeData.languages);
+        } catch (error) {
+            if (error instanceof Error) {
+                // call the login required modal
+                console.log(`Error====>${error}`);
+            } else {
+                // call the error modal with the error message
+                console.log(`Error<<====>>${error}`);
+            }
+        }
     }
-
-    if (templateId.toLowerCase() === 'ivy-template') {
+    if (templateId?.toLowerCase() === 'ivy-template') {
         return (
             <>
                 <div className='w-svw fixed top-0 left-0 bottom-0 bg-cover bg-no-repeat bg-[url("/bg-1.jpg")] overflow-x-hidden'>
@@ -283,5 +305,9 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                 </main>
             </>
         );
+    } else {
+        return (
+            <h1 className="text-[340px] text-[rgb(var(--primary-rgb))]">Template not found...</h1>
+        )
     }
 }

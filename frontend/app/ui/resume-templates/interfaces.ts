@@ -47,6 +47,12 @@ export interface certificateProps {
     description: string
 }
 
+// achievement Props
+export interface achievementProps {
+    title: string
+    description: string
+}
+
 // language Props
 export interface language {
     name: string
@@ -55,6 +61,7 @@ export interface language {
 
 //template Props
 export interface templateProps {
+    templateId?: string
     className?: string
     title: titleProps
     summary: string
@@ -63,6 +70,7 @@ export interface templateProps {
     education: educationProps[]
     projects?: projectsProps[]
     certificates?: certificateProps[]
+    achievements?: achievementProps[]
     languages: language[]
 }
 
@@ -78,10 +86,18 @@ export interface templateFields {
     setExperiences: Function
     education: educationProps[]
     setEducation: Function
-    projects: projectsProps[]
-    setProjects: Function
-    certificates: certificateProps[]
-    setCertificates: Function
+    projects?: projectsProps[]
+    setProjects?: Function
+    certificates?: certificateProps[]
+    setCertificates?: Function
     languages: language[]
     setLanguages: Function
+}
+
+export interface EnhanceResume {
+    resume_data: templateProps
+    scoring_insights: {
+        score: number
+        insights: string[]
+    }
 }

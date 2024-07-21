@@ -1,7 +1,7 @@
 // utilities that interact with the FastAPI backend on resumes endpoint, and return the data in a format that the frontend can use
 
 import {globalFetcher} from "@/app/utils/api-client";
-import { templateProps } from "../ui/resume-templates/interfaces";
+import { EnhanceResume, templateProps } from "../ui/resume-templates/interfaces";
 
 
 export interface Resume {
@@ -60,7 +60,7 @@ export async function deleteResume(resumeId: string): Promise<any> {
     return res;
 }
 
-export async function enhanceResume(resume: Resume, jobUrl?:string, jobDesc?:string) {
+export async function enhanceResume(resume: templateProps, jobUrl?:string, jobDesc?:string): Promise<EnhanceResume> {
     const enhanceObj = {
         resume,
         job_url:jobUrl === undefined ? '' : jobUrl,
@@ -73,7 +73,7 @@ export async function enhanceResume(resume: Resume, jobUrl?:string, jobDesc?:str
         throw new Error('Session ended, login required');
     }
 
-    const enhancedRes = await globalFetcher({
+    const enhancedRes: EnhanceResume = await globalFetcher({
         url:'/ai/enhance/resume',
         method: 'post',
         token,
