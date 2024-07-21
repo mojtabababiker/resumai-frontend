@@ -68,7 +68,7 @@ export default function NavBar({ user }: { user: User | null }) {
 }
 
 export function DashboardNavBar({ user }: { user: User | null }) {
-    const navItems = ['Home', 'About', 'Services', 'Contact'];
+    const navItems: { [key: string]: string } = { 'Home': '/dashboard', 'About': '/dashboard/#about-resumai', 'Services': '/dashboard/#our-services', 'Contact': '/dashboard/#contact-us' };
     const navLinkCSS = "block py-2 px-3 hover:text-[rgb(var(--primary-rgb))] focus:text-[rgb(var(--primary-rgb))] text-[rgba(var(--primary-light-rgba))] md:p-0 transition-all ease-in";
     const navLinkActiveCSS = "block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0";
     const [openNavbar, setOpenNavbar] = React.useState(false);
@@ -97,11 +97,18 @@ export function DashboardNavBar({ user }: { user: User | null }) {
                 </div>
                 <div className={`${!openNavbar && 'hidden'} items-center justify-between w-full md:flex md:w-1/6 md:order-1 lg:w-2/3`} id="navbar-sticky">
                     <ul className="flex flex-col py-4 gap-y-5 md:p-0 mt-32 font-medium border border-gray-100 rounded-lg  md:space-x-8 md:flex-row md:mt-0 md:border-0 md:w-full md:items-center md:justify-center md:gap-3 lg:gap-6">
-                        {navItems.map((item, index) => (
-                            <li key={`${item}-${index}`}>
-                                <a href={`#${item}`} key={`navLink-${index}`} className={item == activeLink ? navLinkActiveCSS : navLinkCSS} onClick={() => { setActiveLink(item) }}>{item}</a>
-                            </li>
-                        ))}
+                        {
+                            /*navItems.map((item, index) => (
+                                <li key={`${item}-${index}`}>
+                                    <a href={`#${item}`} key={`navLink-${index}`} className={item == activeLink ? navLinkActiveCSS : navLinkCSS} onClick={() => { setActiveLink(item) }}>{item}</a>
+                                </li>
+                            ))*/
+                            Object.keys(navItems).map((item, index) => (
+                                <li key={`${item}-${index}`}>
+                                    <a href={navItems[item]} key={`navLink-${index}`} className={item == activeLink ? navLinkActiveCSS : navLinkCSS} onClick={() => { setActiveLink(item) }}>{item}</a>
+                                </li>
+                            ))
+                        }
                         {/* <button type="button" className="text-[rgb(var(--primary-rgb))] block md:hidden align-bottom justify-self-end hover:opacity-90 focus:ring-4 focus:outline-none focus:[rgba(var(--primary-light-rgba))] font-medium rounded-lg text-lg py-2 mt-24 text-center transition-all ease-in-out delay-100">Login</button> */}
                         {/* <ButtonOutLine className='md:hidden' onClick={user ? handleLogout : handleLogin}>{user ? "Logout" : "Login"}</ButtonOutLine> */}
                     </ul>
