@@ -20,7 +20,7 @@ export default function NavBar({ user }: { user: User | null }) {
 
     // log the user out, and delete its access token
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('auth-token');
         window.location.href = '/';
     }
 
@@ -54,7 +54,7 @@ export default function NavBar({ user }: { user: User | null }) {
                 <div className={`${!openNavbar && 'hidden'} items-center justify-between w-full md:flex md:w-1/6 md:order-1 lg:w-2/3`} id="navbar-sticky">
                     <ul className="flex flex-col py-4 gap-y-5 md:p-0 mt-32 font-medium border border-gray-100 rounded-lg  md:space-x-8 md:flex-row md:mt-0 md:border-0 md:w-full md:items-center md:justify-center md:gap-3 lg:gap-6">
                         {navItems.map((item, index) => (
-                            <li>
+                            <li key={index}> {/*create a map or array that holds the true value of links */}
                                 <a href={`#${item}`} key={`navLink-${index}`} className={item == activeLink ? navLinkActiveCSS : navLinkCSS} onClick={() => { setActiveLink(item) }}>{item}</a>
                             </li>
                         ))}
