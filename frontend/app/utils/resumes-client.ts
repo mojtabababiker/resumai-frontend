@@ -60,6 +60,28 @@ export async function deleteResume(resumeId: string): Promise<any> {
     return res;
 }
 
+export async function enhanceResume(resume: Resume, jobUrl?:string, jobDesc?:string) {
+    const enhanceObj = {
+        resume,
+        job_url:jobUrl === undefined ? '' : jobUrl,
+        job_description: jobDesc === undefined ? '' : jobDesc,
+    }
+    const tokenObj = localStorage.getItem('auth-token');
+    const token = tokenObj ? JSON.parse(tokenObj) : null;
+
+    if (!token) {
+        throw new Error('Session ended, login required');
+    }
+
+    const enhancedRes = await globalFetcher({
+        url:'/ai/enhance/resume',
+        method: 'post',
+        token,
+        bodyData: JSON.stringify({...enhanceObj}),
+    });
+    return enhancedRes;
+}
+
 export async function getUserResumes(): Promise<{recent:Resume[], all: Resume[]}> {
     const tokenObj = localStorage.getItem('auth-token');
     const token = tokenObj ? JSON.parse(tokenObj) : null;

@@ -137,6 +137,8 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     const buttonCssClass = 'text-[rgb(var(--background-start-rgb))] hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
 
     const [activeTab, setActiveTab] = useState({ btn_id: 'desc-section-btn', tab_id: 'desc-section' });
+    const [jobDescription, setJobDescription] = useState('');
+    const [jobUrl, setJobUrl] = useState('');
     const [insertJobDesc, setInsertJobDesc] = useState(false);
     const [showModal, setShowModal] = useState({ modalType: '', message: '' });
 
@@ -205,6 +207,16 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         }
     }
 
+    const handleGenerate = async () => {
+        if (!jobUrl && !jobDescription) {
+            console.log('You are about to generate a resume with general enhancement...!');
+        }
+
+        // else call the generate enhanced resume api, providing both jobUrl and jobDescription
+        console.log(jobUrl);
+        console.log(jobDescription);
+    }
+
     if (templateId.toLowerCase() === 'ivy-template') {
         return (
             <>
@@ -251,13 +263,13 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
 
                                     {/* adding job description section */}
                                     {activeTab.tab_id == 'desc-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
-                                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))]">Getting the job description by the link</label>
-                                        <input type="text" id="name" className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
+                                        <label htmlFor="jobUrl" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))]">Getting the job description by the link</label>
+                                        <input type="text" id="jobUrl" onChange={(e) => setJobUrl(e.target.value)} className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
 
-                                        <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
-                                        <textarea rows={7} id="name" className={`w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
+                                        <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="jobDesc" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
+                                        <textarea rows={7} id="jobDesc" onChange={(e) => setJobDescription(e.target.value)} className={`w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
 
-                                        <ButtonSolid className="w-1/2">Generate</ButtonSolid>
+                                        <ButtonSolid onClick={handleGenerate} className="w-1/2">Generate</ButtonSolid>
                                     </section>}
 
                                     {/* insights and scores section */}
