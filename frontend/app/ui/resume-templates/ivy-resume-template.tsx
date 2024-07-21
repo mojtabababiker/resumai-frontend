@@ -3,7 +3,7 @@
 // each field will be editable and has its own customizing panel
 
 import { useState } from "react"
-import * as interfaces from "./interfaces"
+import * as interfaces from "@/app/ui/resume-templates/interfaces"
 import * as resumeFieldsEdits from '@/app/ui/resume-templates/resume-fields-edits'
 
 // dummy data
@@ -132,10 +132,10 @@ function Title(props: interfaces.titleProps) {
     return (
         <>
             <div className="min-w-full flex justify-center items-center mb-3">
-                <h1 className="min-w-full text-center text-zinc-900 text-4xl font-semibold">{name}</h1>
+                <h1 className="min-w-full text-center text-zinc-900 text-3xl font-semibold">{name}</h1>
             </div>
             <div className="min-w-full flex justify-center items-center">
-                <h3 className="min-w-full text-center text-zinc-900 text-2xl">{jobTitle}</h3>
+                <h3 className="min-w-full text-center text-zinc-900 text-xl">{jobTitle}</h3>
             </div>
             <div>
                 <ul className="flex flex-row items-center justify-center links-list gap-3">
@@ -293,7 +293,7 @@ export default function IvyTemplate(props: interfaces.templateFields) {
 
 
     return (
-        <article className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-stone-100 border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className}`}>
+        <article className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-white border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className}`}>
             <div onMouseEnter={(e) => setHovered({ field: 'title' })} onMouseLeave={(e) => setHovered({ field: '' })} id="title-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
                 <Title {...title}></Title>
                 {hovered.field === 'title' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'title', index: -1 }} />}
@@ -317,7 +317,7 @@ export default function IvyTemplate(props: interfaces.templateFields) {
             {/* experience section */}
             <div id="experience-container" className="relative border-0 mb-4 cursor-default">
                 <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Experience</h1>
-                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
+                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-4 list-none">
                     {experiences.map((expr, idx) => {
                         return (
                             <li onMouseEnter={(e) => setHovered({ field: `experiences-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
@@ -403,9 +403,9 @@ export default function IvyTemplate(props: interfaces.templateFields) {
             {toEdit.field === 'summary' && <resumeFieldsEdits.EditSummary summary={summary} setSummary={setSummary} setToEdit={setToEdit}></resumeFieldsEdits.EditSummary>}
             {toEdit.field === 'skills' && <resumeFieldsEdits.EditSkills skills={skills} setSkills={setSkills} setToEdit={setToEdit}></resumeFieldsEdits.EditSkills>}
             {toEdit.field === 'experience' && <resumeFieldsEdits.EditExperience experiences={experiences} experience_idx={toEdit.index} setExperiences={setExperiences} setToEdit={setToEdit}></resumeFieldsEdits.EditExperience>}
-            {toEdit.field === 'project' && <resumeFieldsEdits.EditProject projects={projects} project_idx={toEdit.index} setProjects={setProjects} setToEdit={setToEdit}></resumeFieldsEdits.EditProject>}
+            {toEdit.field === 'project' && projects && setProjects && <resumeFieldsEdits.EditProject projects={projects} project_idx={toEdit.index} setProjects={setProjects} setToEdit={setToEdit}></resumeFieldsEdits.EditProject>}
             {toEdit.field === 'education' && <resumeFieldsEdits.EditEducation educations={education} education_idx={toEdit.index} setEducations={setEducation} setToEdit={setToEdit}></resumeFieldsEdits.EditEducation>}
-            {toEdit.field === 'certificate' && <resumeFieldsEdits.EditCertificate certificates={certificates} certificate_idx={toEdit.index} setCertificates={setCertificates} setToEdit={setToEdit}></resumeFieldsEdits.EditCertificate>}
+            {toEdit.field === 'certificate' && certificates && setCertificates && < resumeFieldsEdits.EditCertificate certificates={certificates} certificate_idx={toEdit.index} setCertificates={setCertificates} setToEdit={setToEdit}></resumeFieldsEdits.EditCertificate>}
             {/* {toEdit.field === 'language' && <EditLanguage />} */}
         </article >
     )

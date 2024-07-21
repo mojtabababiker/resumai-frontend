@@ -8,7 +8,7 @@ import { useUser } from "@/app/utils/auth";
 import { BaseSyntheticEvent, useState } from "react";
 import { addResume, enhanceResume, updateResume } from "@/app/utils/resumes-client";
 import { AlertResumeCreated } from "@/app/ui/alerts";
-import { templateProps } from "@/app/ui/resume-templates/interfaces";
+import { templateProps, resumeData } from "@/app/ui/resume-templates/interfaces";
 
 /////////////////////////////
 //
@@ -129,11 +129,12 @@ const dummyData: templateProps = {
         }
     ]
 }
+
 /////////////////////////////
 
 export default function ResumeDraftPage({ params }: { params: { id: string } }) {
-    let ResumeData = dummyData;
-    const resume = localStorage.getItem('toEditResume');
+    let ResumeData: resumeData = dummyData;
+    const resume = window.localStorage.getItem('toEditResume');
     const templateId = params.id;
     const buttonCssClass = 'text-[rgb(var(--primary-rgb))] hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
 
@@ -179,7 +180,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     }
 
     const saveResume = async () => {
-        const resumeObj = {
+        const resumeObj: templateProps = {
             templateId,
             title,
             summary,
@@ -195,7 +196,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         // console.log(`Saving...\n\n${JSON.stringify(resumeObj)}\n\n`);
         try {
             if (ResumeData.resumeId) {
-                const res = await updateResume({ _id: ResumeData.resumeId, ...resumeObj });
+                const res = await updateResume({ resumeId: ResumeData.resumeId, ...resumeObj });
                 console.log(res);
                 setShowModal({ modalType: 'success-modal', message: 'Resume Updated successfully...' });
             } else {
@@ -254,7 +255,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                 <main className='relative w-full max-w-screen-xl h-svh overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-16 md:mt-5 bg-[rgb(var(--background-start-rgb))]'>
 
                     <DashboardNavBar user={user.user} ></DashboardNavBar>
-                    <section className="w-full min-w-[1280px] sticky top-0 z-10 max-w-screen-xl pb-32 bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
+                    <section className="w-full min-w-[1280px] top-0 z-10 max-w-screen-xl pb-32  bg-center bg-scroll bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
 
                     </section>
                     <section className="mt-10 md:mt-4 w-full px-10">

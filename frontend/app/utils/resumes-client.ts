@@ -1,7 +1,7 @@
 // utilities that interact with the FastAPI backend on resumes endpoint, and return the data in a format that the frontend can use
 
 import {globalFetcher} from "@/app/utils/api-client";
-import { EnhanceResume, templateProps } from "../ui/resume-templates/interfaces";
+import { EnhanceResume, resumeData, templateProps } from "@/app/ui/resume-templates/interfaces";
 
 
 export interface Resume {
@@ -16,7 +16,7 @@ export interface Resume {
  * a utility that interact with the backend API to create a new resume for the current logged in user
  * @param resumeObj the json string that represent the resume fields data
  */
-export async function addResume(resumeObj: object, toUpdate?:boolean): Promise<{data: string, message: string}> {
+export async function addResume(resumeObj: resumeData, toUpdate?:boolean): Promise<{data: string, message: string}> {
 
     const tokenObj = localStorage.getItem('auth-token');
 
@@ -24,10 +24,10 @@ export async function addResume(resumeObj: object, toUpdate?:boolean): Promise<{
     if (!token) {
         throw new Error('Session ended, Login required');
     }
-    const {_id, ...resume} = resumeObj;
+    const {resumeId, ...resume} = resumeObj;
     const res = await globalFetcher(
         {
-            url:`/resumes/${toUpdate && _id}`,
+            url:`/resumes/${toUpdate && resumeId ? resumeId : ''}`,
             method: toUpdate ? 'put' : 'post',
             token: token,
             bodyData: toUpdate ? JSON.stringify({data: resume}) : JSON.stringify(resume),
@@ -36,7 +36,7 @@ export async function addResume(resumeObj: object, toUpdate?:boolean): Promise<{
     return {data: res, message: 'Resume Saved successfully'};
 }
 
-export async function updateResume(resumeObj: object): Promise<{data: string, message: string}> {
+export async function updateResume(resumeObj: resumeData): Promise<{data: string, message: string}> {
     const res = await addResume(resumeObj, true);
     return res;
 }

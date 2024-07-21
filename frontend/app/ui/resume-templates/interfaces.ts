@@ -74,6 +74,10 @@ export interface templateProps {
     languages: language[]
 }
 
+export interface resumeData extends templateProps {
+    resumeId?: string
+}
+
 export interface templateFields {
     className?: string
     title: titleProps

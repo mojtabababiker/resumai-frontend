@@ -73,7 +73,7 @@ export async function getLoginToken(formData: FormData): Promise<TokenResponse> 
             throw new Error('Access token not found');
         }
         return {accessToken: res.access_token, isError: null, isLoading: false};
-    } catch (error) {
+    } catch (error:{response: {data: any, status: number}} | any) {
         return {accessToken:null, isError: {...error.response.data, status: error.response.status}, isLoading: false};
     }
 }
