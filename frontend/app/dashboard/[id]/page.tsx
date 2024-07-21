@@ -135,11 +135,13 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     let ResumeData = dummyData;
     const resume = localStorage.getItem('toEditResume');
     const templateId = params.id;
-    const buttonCssClass = 'text-[rgb(var(--background-start-rgb))] hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
+    const buttonCssClass = 'text-[rgb(var(--primary-rgb))] hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
 
     const [activeTab, setActiveTab] = useState({ btn_id: 'desc-section-btn', tab_id: 'desc-section' });
     const [jobDescription, setJobDescription] = useState('');
     const [jobUrl, setJobUrl] = useState('');
+    const [score, setScore] = useState(0);
+    const [insights, setInsights]: [string[], Function] = useState([]);
     const [insertJobDesc, setInsertJobDesc] = useState(false);
     const [showModal, setShowModal] = useState({ modalType: '', message: '' });
 
@@ -219,8 +221,10 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         const { templateId, ...resumeToUpdate } = ResumeData
         try {
             const enhancedResume = await enhanceResume(resumeToUpdate, jobUrl, jobDescription);
-            console.log(JSON.stringify(enhancedResume.scoring_insights));
+            // console.log(JSON.stringify(enhancedResume.scoring_insights));
+            const scoresAndInsights = enhancedResume.scoring_insights;
             ResumeData = { templateId, ...enhancedResume.resume_data };
+
             setTitle(ResumeData.title);
             setSummary(ResumeData.summary);
             setSkills(ResumeData.skills);
@@ -229,6 +233,9 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
             setProjects(ResumeData.projects);
             setCertificates(ResumeData.certificates);
             setLanguages(ResumeData.languages);
+
+            setScore(scoresAndInsights.score);
+            setInsights(scoresAndInsights.insights);
         } catch (error) {
             if (error instanceof Error) {
                 // call the login required modal
@@ -273,30 +280,56 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                                 </svg>
                             </ButtonSolid>
-                            <aside id="default-sidebar" className="sticky hidden md:block top-36 right-0 w-80 md:w-1/2 lg:w-1/3 h-screen border-0 rounded-xl transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-                                <div className="h-full px-3 py-4 border-0 rounded-xl bg-[rgba(var(--primary-light-rgba))]">
+                            <aside id="default-sidebar" className="sticky hidden md:block top-36 right-0 w-80 md:w-1/2 lg:w-1/3 max-w-[320px] h-[620px] max-h-dvh overflow-x-hidden overflow-y-auto border-2 rounded-xl border-[rgb(var(--primary-rgb))] transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+                                <div className="h-full px-3 py-4 border-0 rounded-xl text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] overflow-y-auto scroll-m-0">
                                     {/* navigation section */}
-                                    <section className='min-w-full mb-20 flex flex-col gap-y-10 justify-stretch overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
+                                    <section className='min-w-full mb-10 flex flex-col gap-y-10 justify-stretch overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
                                         <div className='flex justify-start gap-3 overflow-hidden'>
-                                            <button className={`${buttonCssClass} ${activeTab.btn_id === 'recent-tab-btn' && 'border-b border-[rgb(var(--background-start-rgb))] border-opacity-60'}`} id='desc-section-btn' itemID='desc-section' onClick={handleTabDisplay}>Add job Description</button>
-                                            <button className={`${buttonCssClass} ${activeTab.btn_id === 'all-tab-btn' && 'border-b border-[rgb(var( --background-start-rgb)] border-opacity-60'}`} id='insg-section-btn' itemID='insg-section' onClick={handleTabDisplay}>insights & Scores</button>
+                                            <button className={`${buttonCssClass} ${activeTab.btn_id === 'recent-tab-btn' && 'border-b border-[rgb(var(--primary-rgb))] border-opacity-60'}`} id='desc-section-btn' itemID='desc-section' onClick={handleTabDisplay}>Add job Description</button>
+                                            <button className={`${buttonCssClass} ${activeTab.btn_id === 'all-tab-btn' && 'border-b border-[rgb(var(--primary-rgb)] border-opacity-60'}`} id='insg-section-btn' itemID='insg-section' onClick={handleTabDisplay}>insights & Scores</button>
                                         </div>
                                     </section>
+                                    <section className="w-full h-[320px] flex flex-col gap-5 overflow-y-auto scroll-m-0 transition-all ease-in delay-100">
+                                        {/* adding job description section */}
+                                        {activeTab.tab_id == 'desc-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
+                                            <label htmlFor="jobUrl" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))]">Getting the job description by the link</label>
+                                            <input type="text" id="jobUrl" onChange={(e) => setJobUrl(e.target.value)} className="w-full p-4 text-[rgb(var(--primary-rgb))] text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
 
-                                    {/* adding job description section */}
-                                    {activeTab.tab_id == 'desc-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
-                                        <label htmlFor="jobUrl" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))]">Getting the job description by the link</label>
-                                        <input type="text" id="jobUrl" onChange={(e) => setJobUrl(e.target.value)} className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
+                                            <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="jobDesc" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
+                                            <textarea rows={7} id="jobDesc" onChange={(e) => setJobDescription(e.target.value)} className={`w-full p-4 text-[rgb(var(--primary-rgb))] text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
 
-                                        <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="jobDesc" className="block mb-2 text-sm font-medium text-[rgb(var(--background-start-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
-                                        <textarea rows={7} id="jobDesc" onChange={(e) => setJobDescription(e.target.value)} className={`w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
+                                            <ButtonSolid onClick={handleGenerate} className="w-1/2">Generate</ButtonSolid>
+                                        </section>}
 
-                                        <ButtonSolid onClick={handleGenerate} className="w-1/2">Generate</ButtonSolid>
-                                    </section>}
+                                        {/* insights and scores section */}
+                                        {activeTab.tab_id == 'insg-section' && insights.length > 0 &&
+                                            <section className="w-full flex flex-col items-center justify-center gap-5">
+                                                <div className="w-full flex flex-col items-center justify-center gap-5">
+                                                    <div className="w-full flex flex-col items-center justify-center gap-5">
+                                                        <h1 className="w-full text-sm font-bold text-[rgb(var(--primary-rgb))]">Resume Completeness</h1>
+                                                        <p className="w-full text-xs text-[rgb(var(--primary-rgb))]">Your resume is {score < 0.8 ? score * 100 : 80}% complete</p>
+                                                    </div>
+                                                    <div className="w-full flex flex-col items-center justify-center gap-5">
+                                                        <h1 className="w-full text-sm  font-bold text-[rgb(var(--primary-rgb))]">Suggestions and Tips</h1>
+                                                        <ul className="w-full flex flex-col list-disc gap-3">
+                                                            {
+                                                                insights.map((insight, index) => {
+                                                                    return (<li key={index} className="w-full text-xs font-normal text-[rgb(var(--primary-rgb))] bg-white p-4 border rounded-md ">{insight}</li>);
+                                                                })
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        }
+                                        {activeTab.tab_id == 'insg-section' && insights.length === 0 &&
+                                            <section className="w-full flex flex-col items-center justify-center gap-5">
+                                                <h1 className="w-full text-sm font-bold text-[rgb(var(--primary-rgb))]">No insights available...</h1>
+                                                <p className="w-full text-xs text-[rgb(var(--primary-rgb))]">You need to <span className="font-semibold underline cursor-pointer hover:scale-105" onClick={handleGenerate}>Generate</span> resume enhancement first !</p>
+                                            </section>
+                                        }
+                                    </section>
 
-                                    {/* insights and scores section */}
-                                    {activeTab.tab_id == 'insg-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
-                                    </section>}
                                 </div>
                             </aside>
                         </div>
