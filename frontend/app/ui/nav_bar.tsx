@@ -36,10 +36,10 @@ export default function NavBar({ user }: { user: User | null }) {
 
     return (
         <nav className="bg-[rgb(var(--background-start-rgb))] fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-lg transition-all ease-in delay-75">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="/img.png" className="h-8 text-xs" alt="Resumai Logo" />
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap ">Resumai</span>
+            <div className="max-w-screen-xl flex flex-wrap md:flex-nowrap items-center justify-between mx-auto p-4">
+                <a href="/" className="flex w-[20%] min-w-[130px] max-w-[180px] items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/logo-img.png" className="text-xs" alt="Resumai Logo" />
+                    {/* <span className="self-center text-2xl font-semibold whitespace-nowrap ">Resumai</span> */}
                 </a>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <ButtonOutLine className='hidden' onClick={user ? handleLogout : handleLogin}>{user ? "Logout" : "Login"}</ButtonOutLine>
@@ -51,7 +51,7 @@ export default function NavBar({ user }: { user: User | null }) {
                         </svg>
                     </button>
                 </div>
-                <div className={`${!openNavbar && 'hidden'} items-center justify-between w-full md:flex md:w-1/3 md:order-1 lg:w-2/3`} id="navbar-sticky">
+                <div className={`${!openNavbar && 'hidden'} items-center justify-between w-full md:flex md:w-1/6 md:order-1 lg:w-2/3`} id="navbar-sticky">
                     <ul className="flex flex-col py-4 gap-y-5 md:p-0 mt-32 font-medium border border-gray-100 rounded-lg  md:space-x-8 md:flex-row md:mt-0 md:border-0 md:w-full md:items-center md:justify-center md:gap-3 lg:gap-6">
                         {navItems.map((item, index) => (
                             <li>
@@ -80,10 +80,10 @@ export function DashboardNavBar({ user }: { user: User | null }) {
 
     return (
         <nav className="bg-[rgb(var(--background-start-rgb))] fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-lg transition-all ease-in delay-75">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 text-xs" alt="Logo" />
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap ">Resumai</span>
+            <div className="max-w-screen-xl flex flex-wrap md:flex-nowrap items-center justify-between mx-auto p-4">
+                <a href="/" className="flex w-[20%] min-w-[130px] max-w-[180px] items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/logo-img.png" className="text-xs object-contain" alt="Resumai Logo" />
+                    {/* <span className="self-center text-2xl font-semibold whitespace-nowrap ">Resumai</span> */}
                 </a>
                 <div className="flex md:order-2 space-x-3 md:space-x-0">
                     <div className='flex justify-center items-center w-fit md:mr-4'><p className='w-fit font-semibold'>{`${user.first_name} ${user.last_name}`}</p></div>
@@ -95,7 +95,7 @@ export function DashboardNavBar({ user }: { user: User | null }) {
                         </svg>
                     </button>
                 </div>
-                <div className={`${!openNavbar && 'hidden'} items-center justify-between w-full md:flex md:w-1/3 md:order-1 lg:w-2/3`} id="navbar-sticky">
+                <div className={`${!openNavbar && 'hidden'} items-center justify-between w-full md:flex md:w-1/6 md:order-1 lg:w-2/3`} id="navbar-sticky">
                     <ul className="flex flex-col py-4 gap-y-5 md:p-0 mt-32 font-medium border border-gray-100 rounded-lg  md:space-x-8 md:flex-row md:mt-0 md:border-0 md:w-full md:items-center md:justify-center md:gap-3 lg:gap-6">
                         {navItems.map((item, index) => (
                             <li key={`${item}-${index}`}>
