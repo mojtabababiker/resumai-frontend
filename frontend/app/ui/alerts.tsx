@@ -24,13 +24,13 @@ export const AlertResumeCreated = ({ closeModel, message }: { closeModel: MouseE
                 <div className="relative bg-[rgb(var(--primary-rgb))] border-0 rounded-lg">
                     <button onClick={closeModel} type="button" className="absolute top-3 end-2.5 bg-transparent text-gray-200 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                         </svg>
                         <span className="sr-only">Close modal</span>
                     </button>
                     <div className="p-4 md:p-5 text-center">
                         <svg className="mx-auto mb-4 w-12 h-12 text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                         <h3 className="mb-5 text-lg font-normal text-gray-200">{message}</h3>
                         <Link href={'/dashboard'} type="button" className="text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
@@ -56,13 +56,13 @@ export const AlertResumeDelete = ({ closeModel, confirm, message, toDelete }: { 
                 <div className="relative bg-white border-0 rounded-lg">
                     <button onClick={closeModel} type="button" className="absolute top-3 end-2.5 bg-transparent text-[rgb(var(--primary-rgb))] hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                         </svg>
                         <span className="sr-only">Close modal</span>
                     </button>
                     <div className="p-4 md:p-5 text-center">
                         <svg className="mx-auto mb-4 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                         <h3 className="mb-5 text-lg font-normal">{message}</h3>
                         <button onClick={confirmAndExit} type="button" className="text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
