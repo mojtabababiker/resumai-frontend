@@ -7,6 +7,7 @@ import * as templates from "@/app/ui/resume-templates/templates";
 import { useUser } from "@/app/utils/auth";
 import { BaseSyntheticEvent, useState } from "react";
 import { addResume, enhanceResume, updateResume } from "@/app/utils/resumes-client";
+import { downloadPDF } from "@/app/utils/download-pdf";
 import { AlertResumeCreated } from "@/app/ui/alerts";
 import { templateProps, resumeData } from "@/app/ui/resume-templates/interfaces";
 
@@ -247,6 +248,17 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
             }
         }
     }
+
+    const handleDownload = async () => {
+        try {
+            await downloadPDF(user.user?.first_name || 'My');
+            setShowModal({ modalType: 'success-modal', message: 'Resume Downloaded successfully...' });
+        } catch (error) {
+            // console.log(`Error====>${error}`);
+            throw error;
+        }
+    }
+
     if (templateId?.toLowerCase() === 'ivy-template') {
         return (
             <>
@@ -260,7 +272,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                     </section>
                     <section className="mt-10 md:mt-4 w-full px-10">
                         <div className="sticky top-20 z-30 w-full flex items-center justify-center md:justify-end gap-4 mb-4 sbg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
-                            <ButtonOutLine className="border-[rgb(var(--background-start-rgb))] text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))]">Download</ButtonOutLine>
+                            <ButtonOutLine onClick={handleDownload} className="border-[rgb(var(--background-start-rgb))] text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))]">Download</ButtonOutLine>
                             <ButtonOutLine className="border-[rgb(var(--background-start-rgb))] text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))]">Clear</ButtonOutLine>
                             <ButtonSolid onClick={saveResume} className="w-32 bg-[rgba(var(--primary-light-rgba))]">Save</ButtonSolid>
                         </div>
