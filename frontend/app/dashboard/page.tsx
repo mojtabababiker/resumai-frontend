@@ -7,6 +7,11 @@ import Link from 'next/link';
 import * as resumesClient from '../utils/resumes-client';
 import { templateProps } from '../ui/resume-templates/interfaces';
 import { AlertResumeDelete } from '../ui/alerts';
+import { printableIvy } from '../ui/resume-templates/templates';
+import { downloadPDF } from '../utils/download-pdf';
+import { PrintableIvyTemplate } from '../ui/resume-templates/ivy-resume-template';
+import { renderToHTML } from 'next/dist/server/render';
+import { renderToString } from 'react-dom/server';
 
 export default function DashboardPage() {
     const user = useUser();
@@ -17,6 +22,17 @@ export default function DashboardPage() {
     const [showModal, setShowModal] = useState({ modalType: '', message: '', toDelete: '' });
     const [confirmDel, setConfirmDel] = useState(false);
     const [templateId, setTemplateId] = useState('');
+    const [toDownload, setToDownload]: [{ data: templateProps, start: boolean }, Function] = useState(
+        {
+            data: {
+                templateId: '', className: '',
+                title: { jobTitle: '', name: '' },
+                summary: '', skills: [], experiences: [], education: [],
+                projects: [], certificates: [], achievements: [], languages: []
+            },
+            start: false,
+        }
+    );
 
     if (user.isLoading) {
         return <h1 className='text-[340px]'>Loading...</h1>;
@@ -78,7 +94,17 @@ export default function DashboardPage() {
 
     const downloadResume = (resume: resumesClient.Resume, event: BaseSyntheticEvent) => {
         event.stopPropagation();
+        resume.data.className = 'hidden';
+        setToDownload({ data: resume.data, start: true });
+        const resumeArticle = document.createElement('article');
+        resumeArticle.setAttribute('class', 'hidden');
+        // create the resume template using the resume data
+        const props = { ...resume.data, setEducation: () => { }, setExperiences: () => { }, setLanguages: () => { }, setSkills: () => { }, setTitle: () => { }, setSummary: () => { } }
+
+        resumeArticle.innerHTML = `${renderToString(<PrintableIvyTemplate props={props} />)}`;
+        document.body.appendChild(resumeArticle);
         // use the j2pdf and html2canvas to convert the resume template into a pdf
+        downloadPDF(user_name);
         // download the pdf file name it as <user-full-name-resume>.pdf
         console.log(resume);
     }
@@ -99,7 +125,7 @@ export default function DashboardPage() {
         <main className='relative w-full max-w-screen-xl flex flex-col items-center p-0 md:p-0 mt-28 md:mt-5'>
             <DashboardNavBar user={user.user} />
             <section>
-                <div className='w-svw p-0 m-0 bg-no-repeat bg-cover backdrop-brightness-0 backdrop-blur-sm overflow-hidden bg-[url("/bg-4.jpg")]'>
+                <div className='w-svw max-h-[320px] flex justify-center items-center p-0 m-0 bg-no-repeat bg-cover backdrop-brightness-0 backdrop-blur-sm overflow-hidden bg-[url("/bg-4.jpg")]'>
                     <div className='w-svw bg-[#0000006f] py-4 flex justify-center'>
                         <div className='max-w-screen-xl w-full mt-20 px-4 pb-20 flex flex-col gap-y-10 justify-center items-center md:flex-row md:items-start md:justify-between'>
                             <div className='w-3/4 flex text-white'>
@@ -110,7 +136,7 @@ export default function DashboardPage() {
                     focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" onClick={startResumeBuild} tabIndex={0}>
                                     Create
                                     <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" strokeWidth="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
+                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                                     </svg>
                                 </button>
                             </div>
@@ -119,8 +145,8 @@ export default function DashboardPage() {
                 </div>
                 <section className='min-w-full  mb-20 flex gap-y-10 justify-center overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
                     <div className='max-w-screen-xl w-full flex justify-start gap-3 overflow-auto'>
-                        <button className={`${buttonCssClass} ${activeTab.btn_id === 'recent-tab-btn' && 'border-b border-[rgba(var(--primary-light-rgba))] border-opacity-60'}`} id='recent-tab-btn' itemID='recent-tab' onClick={handleTabDisplay}>Recent</button>
-                        <button className={`${buttonCssClass} ${activeTab.btn_id === 'all-tab-btn' && 'border-b border-[rgba(var(--primary-light-rgba))] border-opacity-60'}`} id='all-tab-btn' itemID='all-tab' onClick={handleTabDisplay}>All Resumes({userResumes.all.length})</button>
+                        <button className={`${buttonCssClass} ${activeTab.btn_id === 'recent-tab-btn' && 'border-b border-[rgba(var(--primary-light-rgba))] border-opacity-60'} `} id='recent-tab-btn' itemID='recent-tab' onClick={handleTabDisplay}>Recent</button>
+                        <button className={`${buttonCssClass} ${activeTab.btn_id === 'all-tab-btn' && 'border-b border-[rgba(var(--primary-light-rgba))] border-opacity-60'} `} id='all-tab-btn' itemID='all-tab' onClick={handleTabDisplay}>All Resumes({userResumes.all.length})</button>
                     </div>
                 </section>
             </section>
@@ -140,7 +166,7 @@ export default function DashboardPage() {
                                     <button onClick={(event) => { downloadResume(resume, event) }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-[rgba(var(--primary-light-rgba))] rounded-lg hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none">
                                         Download
                                         <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                                         </svg>
                                     </button>
                                     <button onClick={(event) => handleDelete(event, resume._id)} className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
@@ -151,8 +177,8 @@ export default function DashboardPage() {
                                     </button>
                                     <button className="absolute top-[2rem] right-0 flex justify-center items-center w-8 h-8 bg-inherit hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg" onClick={(event) => editResume(resume, event)}>
                                         <svg className="w-5 h-5 hover:text-[rgb(var(--background-start-rgb))]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd" />
-                                            <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd" />
+                                            <path fillRule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clipRule="evenodd" />
+                                            <path fillRule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clipRule="evenodd" />
                                         </svg>
                                     </button>
                                 </div>
@@ -176,7 +202,7 @@ export default function DashboardPage() {
                                     <button onClick={(event) => { downloadResume(resume, event) }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-[rgba(var(--primary-light-rgba))] rounded-lg hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none">
                                         Download
                                         <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                                         </svg>
                                     </button>
                                     <button onClick={(event) => handleDelete(event, resume._id)} className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
@@ -187,8 +213,8 @@ export default function DashboardPage() {
                                     </button>
                                     <button className="absolute top-[2rem] right-0 flex justify-center items-center w-8 h-8 bg-inherit hover:bg-[rgb(var(--primary-rgb))] hover:text-[rgb(var(--background-start-rgb))] rounded-lg" onClick={(event) => editResume(resume, event)}>
                                         <svg className="w-5 h-5 hover:text-[rgb(var(--background-start-rgb))]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd" />
-                                            <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd" />
+                                            <path fillRule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clipRule="evenodd" />
+                                            <path fillRule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clipRule="evenodd" />
                                         </svg>
                                     </button>
                                 </div>
@@ -217,14 +243,14 @@ export default function DashboardPage() {
                         <div className="p-4 md:p-5 space-y-4 overflow-hidden">
                             <div className='p-0 m-0 flex flex-col md:flex-row overflow-auto'>
                                 {templates.map((template, idx) => {
-                                    return <Image src={`/templates_thumbnail/${template}.png`} alt={`${template} thumbnail`} width={360} height={420}
-                                        className={`cursor-pointer border p-3 hover:scale-90 hover:drop-shadow-sm hover:filter transition-transform ease-in delay-75 ${templateId === template && 'scale-90'}`} key={`${template}-${idx}`}
+                                    return <Image src={`/ templates_thumbnail / ${template}.png`} alt={`${template} thumbnail`} width={360} height={420}
+                                        className={`cursor - pointer border p - 3 hover: scale - 90 hover: drop - shadow - sm hover:filter transition - transform ease -in delay - 75 ${templateId === template && 'scale-90'} `} key={`${template} -${idx} `}
                                         onClick={(e) => { setTemplateId(template) }}></Image>
                                 })}
                             </div>
                         </div>
                         <div className="flex items-center px-4 md:px-5 py-3 border-t rounded-b">
-                            <Link href={`/dashboard/${templateId}`} className="text-white bg-[rgba(var(--primary-light-rgba))] hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Build</Link>
+                            <Link href={`/ dashboard / ${templateId} `} className="text-white bg-[rgba(var(--primary-light-rgba))] hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Build</Link>
                             <button onClick={exitResumeBuild} className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-[rgba(var(--primary-light-rgba))] focus:z-10 focus:ring-0">Decline</button>
                         </div>
                     </div>

@@ -292,8 +292,34 @@ export default function IvyTemplate(props: interfaces.templateFields) {
     const [hovered, setHovered] = useState({ field: '' });
 
 
+    return PrintableIvyTemplate({ props, interActionsHooks: { edit: { setToEdit, toEdit }, hovered: { setHovered, hovered } } });
+}
+
+
+/**
+ * Function act as an abstract that can work for both printable and editable template
+ * @param props 
+ * @returns 
+ */
+
+export function PrintableIvyTemplate(props: { props: interfaces.templateFields, interActionsHooks?: { edit: { setToEdit: Function, toEdit: {} }, hovered: { setHovered: Function, hovered: {} } } }) {
+
+    const {
+        title, setTitle,
+        summary, setSummary,
+        skills, setSkills,
+        experiences, setExperiences,
+        education, setEducation,
+        projects, setProjects,
+        certificates, setCertificates,
+        languages, setLanguages
+    } = props.props;
+
+    const { setToEdit, toEdit } = props.interActionsHooks?.edit || { setToEdit: () => { }, toEdit: { field: '' } };
+    const { setHovered, hovered } = props.interActionsHooks?.hovered || { setHovered: () => { }, hovered: { field: '' } };
+
     return (
-        <article id="resume-template" className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-white border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className}`}>
+        <article id="resume-template" className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-white border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className || ''}`}>
             <div onMouseEnter={(e) => setHovered({ field: 'title' })} onMouseLeave={(e) => setHovered({ field: '' })} id="title-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
                 <Title {...title}></Title>
                 {hovered.field === 'title' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'title', index: -1 }} />}
@@ -408,5 +434,5 @@ export default function IvyTemplate(props: interfaces.templateFields) {
             {toEdit.field === 'certificate' && certificates && setCertificates && < resumeFieldsEdits.EditCertificate certificates={certificates} certificate_idx={toEdit.index} setCertificates={setCertificates} setToEdit={setToEdit}></resumeFieldsEdits.EditCertificate>}
             {/* {toEdit.field === 'language' && <EditLanguage />} */}
         </article >
-    )
+    );
 }
