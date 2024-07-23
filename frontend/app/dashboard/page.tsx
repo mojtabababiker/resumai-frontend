@@ -45,7 +45,7 @@ export default function DashboardPage() {
 
     const user_name = `${user.user.first_name} ${user.user.last_name}`;
     const buttonCssClass = 'text-[rgba(var(--primary-light-rgba))] hover:text-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none text-sm px-5 py-2.5 text-center inline-flex items-center';
-    const templates = ['Ivy-template', 'Ivy-template', 'Ivy-template']
+    const templates = ['Ivy-template', 'Ivy-template copy', 'Ivy-template copy 2']
 
     const startResumeBuild = () => {
         setResumeBuild(true);
@@ -243,14 +243,15 @@ export default function DashboardPage() {
                         <div className="p-4 md:p-5 space-y-4 overflow-hidden">
                             <div className='p-0 m-0 flex flex-col md:flex-row overflow-auto'>
                                 {templates.map((template, idx) => {
-                                    return <Image src={`/ templates_thumbnail / ${template}.png`} alt={`${template} thumbnail`} width={360} height={420}
-                                        className={`cursor - pointer border p - 3 hover: scale - 90 hover: drop - shadow - sm hover:filter transition - transform ease -in delay - 75 ${templateId === template && 'scale-90'} `} key={`${template} -${idx} `}
-                                        onClick={(e) => { setTemplateId(template) }}></Image>
+                                    return <Image src={`/templates_thumbnail/${template}.png`} alt={`${template} thumbnail`} width={360} height={420}
+                                        className={`cursor-pointer border p-3 hover:scale-90 hover:drop-shadow-sm hover:filter transition-transform ease-in delay-75 ${templateId === template && 'scale-90'} `} key={`${template}-${idx}`}
+                                        onClick={(e) => { setTemplateId(template) }}>
+                                    </Image>
                                 })}
                             </div>
                         </div>
                         <div className="flex items-center px-4 md:px-5 py-3 border-t rounded-b">
-                            <Link href={`/ dashboard / ${templateId} `} className="text-white bg-[rgba(var(--primary-light-rgba))] hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Build</Link>
+                            <Link href={`/dashboard/${templateId}`} className="text-white bg-[rgba(var(--primary-light-rgba))] hover:bg-[rgb(var(--primary-rgb))] focus:ring-0 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Build</Link>
                             <button onClick={exitResumeBuild} className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-[rgba(var(--primary-light-rgba))] focus:z-10 focus:ring-0">Decline</button>
                         </div>
                     </div>

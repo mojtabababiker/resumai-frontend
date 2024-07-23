@@ -5,6 +5,7 @@
 import { useState } from "react"
 import * as interfaces from "@/app/ui/resume-templates/interfaces"
 import * as resumeFieldsEdits from '@/app/ui/resume-templates/resume-fields-edits'
+import { AlertResumeDelete } from "../alerts";
 
 // dummy data
 // const dummyData = {
@@ -239,31 +240,45 @@ function Language(props: interfaces.language) {
 
 
 // option pop up
-function OptionPopUp(props: { setToEdit: Function, toEdit: { field: string, index: number } }) {
+function OptionPopUp(props: {
+    setToEdit: Function, toEdit: { field: string, index: number },
+    add: Function,
+    setToDelete: Function, toDelete: { fieldItems: object[], item_idx: number, fieldType: string, setFieldItems: Function },
+}) {
 
-    const { setToEdit, toEdit } = props;
+    const { setToEdit, toEdit, add, setToDelete, toDelete } = props;
     return (
         <div className="absolute top-0 left-0 -translate-y-1/2 w-full h-8bg-opacity-50 border-none rounded-lg flex justify-center items-center gap-4">
-            {/* add section */}
-            <button className="flex justify-center items-center bg-green-800 border rounded-full p-1" onClick={() => console.log()}>
-                <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clipRule="evenodd" />
-                </svg>
-            </button>
             {/* delete the current section */}
-            <button className="flex justify-center items-center  bg-red-500 border rounded-full p-1" onClick={() => console.log()}>
+            <button className="relative flex justify-center items-center bg-[rgba(var(--primary-light-rgba))] border rounded-full p-1" onClick={() => { setToDelete({ ...toDelete }) }}>
                 <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm5.757-1a1 1 0 1 0 0 2h8.486a1 1 0 1 0 0-2H7.757Z" clipRule="evenodd" />
                 </svg>
-
+                <div id="tooltip-default" role="tooltip" className="absolute z-10 -top-[100%] inline-block w-fit px-2 py-1 text-xs font-extralight text-white bg-[rgba(var(--primary-light-rgba))] transition-opacity duration-300 rounded-lg opacity-0">
+                    Delete
+                    <div className="tooltip-arrow" data-popper-arrow></div>
+                </div>
             </button>
-
             {/* edit the section */}
-            <button className="flex justify-center items-center  bg-gray-800 border rounded-full p-1" onClick={() => setToEdit(toEdit)}>
+            <button className="relative flex justify-center items-center bg-slate-600 border rounded-full p-1" onClick={() => setToEdit(toEdit)}>
                 <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path fillRule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clipRule="evenodd" />
                     <path fillRule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clipRule="evenodd" />
                 </svg>
+                <div id="tooltip-default" role="tooltip" className="absolute z-10 -top-[100%] inline-block w-fit px-2 py-1 text-xs font-extralight text-white bg-slate-600 transition-opacity duration-300 rounded-lg opacity-0">
+                    Edit
+                    <div className="tooltip-arrow" data-popper-arrow></div>
+                </div>
+            </button>
+            {/* add section */}
+            <button className="relative flex justify-center items-center bg-slate-600 border rounded-full p-1" onClick={() => add()}>
+                <svg className="w-4 h-4 text-slate-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clipRule="evenodd" />
+                </svg>
+                <div id="tooltip-default" role="tooltip" className="absolute z-10 -top-[100%] inline-block w-fit px-2 py-1 text-xs font-extralight text-white bg-slate-600 transition-opacity duration-300 rounded-lg opacity-0">
+                    Add
+                    <div className="tooltip-arrow" data-popper-arrow></div>
+                </div>
             </button>
         </div>
     );
@@ -274,16 +289,16 @@ export default function IvyTemplate(props: interfaces.templateFields) {
 
     // move to the edit page
 
-    const {
-        title, setTitle,
-        summary, setSummary,
-        skills, setSkills,
-        experiences, setExperiences,
-        education, setEducation,
-        projects, setProjects,
-        certificates, setCertificates,
-        languages, setLanguages
-    } = props
+    // const {
+    //     title, setTitle,
+    //     summary, setSummary,
+    //     skills, setSkills,
+    //     experiences, setExperiences,
+    //     education, setEducation,
+    //     projects, setProjects,
+    //     certificates, setCertificates,
+    //     languages, setLanguages
+    // } = props
 
     const [toEdit, setToEdit] = useState({ field: '', index: -1 });
 
@@ -302,7 +317,7 @@ export default function IvyTemplate(props: interfaces.templateFields) {
  * @returns 
  */
 
-export function PrintableIvyTemplate(props: { props: interfaces.templateFields, interActionsHooks?: { edit: { setToEdit: Function, toEdit: {} }, hovered: { setHovered: Function, hovered: {} } } }) {
+export function PrintableIvyTemplate(props: { props: interfaces.templateFields, interActionsHooks?: { edit: { setToEdit: Function, toEdit: { field: any, index: number } }, hovered: { setHovered: Function, hovered: { field: any } } } }) {
 
     const {
         title, setTitle,
@@ -315,124 +330,177 @@ export function PrintableIvyTemplate(props: { props: interfaces.templateFields, 
         languages, setLanguages
     } = props.props;
 
-    const { setToEdit, toEdit } = props.interActionsHooks?.edit || { setToEdit: () => { }, toEdit: { field: '' } };
-    const { setHovered, hovered } = props.interActionsHooks?.hovered || { setHovered: () => { }, hovered: { field: '' } };
+    const { setToEdit, toEdit } = props.interActionsHooks ? props.interActionsHooks.edit : { setToEdit: (field: any) => { }, toEdit: { field: '' } };
+    const { setHovered, hovered } = props.interActionsHooks ? props.interActionsHooks.hovered : { setHovered: (field: any) => { }, hovered: { field: '' } };
+
+    const [deleteField, setDeleteField] = useState({ fieldItems: [], item_idx: 0, fieldType: '', setFieldItems: (fieldItems: any) => { } });
 
     return (
-        <article id="resume-template" className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-white border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className || ''}`}>
-            <div onMouseEnter={(e) => setHovered({ field: 'title' })} onMouseLeave={(e) => setHovered({ field: '' })} id="title-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
-                <Title {...title}></Title>
-                {hovered.field === 'title' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'title', index: -1 }} />}
-            </div>
-            {/* summary section */}
-            <div onMouseEnter={(e) => setHovered({ field: 'summary' })} onMouseLeave={(e) => setHovered({ field: '' })} id="summary-container" className="relative mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Summary</h1>
-                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{summary}</p>
-
-                {hovered.field === 'summary' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "summary", index: -1 }} />}
-            </div>
-
-            {/* skills section */}
-            <div onMouseEnter={(e) => setHovered({ field: 'skills' })} onMouseLeave={(e) => setHovered({ field: '' })} id="skills-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Skills</h1>
-                <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{skills.join(', ')}</p>
-
-                {hovered.field === 'skills' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "skills", index: -1 }} />}
-            </div>
-
-            {/* experience section */}
-            <div id="experience-container" className="relative border-0 mb-4 cursor-default">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Experience</h1>
-                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-4 list-none">
-                    {experiences.map((expr, idx) => {
-                        return (
-                            <li onMouseEnter={(e) => setHovered({ field: `experiences-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
-                                <Experience {...expr} />
-                                {hovered.field === `experiences-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "experience", index: idx }} />}
-                            </li>
-                        );
-                    })}
-                </ul>
-                {/* {hovered.field === 'experiences' && <OptionPopUp />} */}
-            </div>
-
-            {/* project section */}
-            {projects && <div className="relative border-0 mb-4 cursor-default">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Projects</h1>
-                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {projects.map((project, idx) => {
-                        return (
-                            <li onMouseEnter={(e) => setHovered({ field: `project-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
-                                <Project {...project} />
-                                {hovered.field === `project-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'project', index: idx }} />}
-                            </li>
-                        );
-                    })}
-                </ul>
-                {/* {hovered.field === 'projects' && <OptionPopUp />} */}
-            </div>
+        <>
+            {/* Confirm field deletion modal */}
+            {deleteField.fieldType !== '' && <AlertResumeDelete
+                closeModel={() => setDeleteField({ fieldItems: [], item_idx: -1, fieldType: '', setFieldItems: () => { } })}
+                message={'Confirm field deletion...'}
+                confirm={resumeFieldsEdits.removeField}
+                toDelete={deleteField} />
             }
+            {/* Resume template article */}
+            <article id="resume-template" className={`flex flex-col w-full max-w-[640px] min-h-[720px] bg-white border p-8 m-auto gap-4 items-stretch justify-stretch ${props.className || ''}`}>
+                <div onMouseEnter={(e) => setHovered({ field: 'title' })} onMouseLeave={(e) => setHovered({ field: '' })} id="title-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                    <Title {...title}></Title>
+                    {hovered.field === 'title' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'title', index: -1 }} add={() => { }} toAdd={{ field: '', index: -1 }}
+                        setToDelete={setDeleteField}
+                        toDelete={{ fieldItems: experiences, item_idx: -1, fieldType: 'title', setFieldItems: setExperiences }} />
+                    }
+                </div>
+                {/* summary section */}
+                <div onMouseEnter={(e) => setHovered({ field: 'summary' })} onMouseLeave={(e) => setHovered({ field: '' })} id="summary-container" className="relative mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Summary</h1>
+                    <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{summary}</p>
 
-            {/* education section */}
-            {education && <div className="relative border-0 mb-4 cursor-default">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Education</h1>
-                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {education.map((edu, idx) => {
-                        return (
-                            <li onMouseEnter={(e) => setHovered({ field: `education-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
-                                <Education {...edu} />
-                                {hovered.field === `education-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "education", index: idx }} />}
-                            </li>
-                        );
-                    })}
-                </ul>
-                {/* {hovered.field === 'education' && <OptionPopUp />} */}
-            </div>}
+                    {hovered.field === 'summary' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "summary", index: -1 }} add={() => { }} toAdd={{ field: 'summary', index: 0 }}
+                        setToDelete={setDeleteField}
+                        toDelete={{ fieldItems: experiences, item_idx: -1, fieldType: 'title', setFieldItems: setExperiences }} />
+                    }
+                </div>
+
+                {/* skills section */}
+                <div onMouseEnter={(e) => setHovered({ field: 'skills' })} onMouseLeave={(e) => setHovered({ field: '' })} id="skills-container" className="relative border-0 mb-4 cursor-default transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:border hover:drop-shadow-sm">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Skills</h1>
+                    <p className="w-full p-0 m-0 text-xs text-zinc-800 text-pretty">{skills.join(', ')}</p>
+
+                    {hovered.field === 'skills' && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "skills", index: -1 }} add={() => { }} toAdd={{ field: 'skills', index: -1 }} delete={() => { }} toDelete={{ field: 'skills', index: -1 }} />}
+                </div>
+
+                {/* experience section */}
+                <div id="experience-container" className="relative border-0 mb-4 cursor-default">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Experience</h1>
+                    <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-4 list-none">
+                        {experiences.map((expr, idx) => {
+                            return (
+                                <li onMouseEnter={(e) => setHovered({ field: `experiences-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} id={`${idx}`} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                    <Experience {...expr} />
+                                    {hovered.field === `experiences-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "experience", index: idx }}
+                                        add={() => {
+                                            console.log('add experience');
+                                            resumeFieldsEdits.addField({ fieldItems: experiences, item_idx: idx, fieldType: 'experience', setToEdit });
+                                        }}
+                                        setToDelete={setDeleteField}
+                                        toDelete={{ fieldItems: experiences, item_idx: idx, fieldType: 'experience', setFieldItems: setExperiences }} />
+                                    }
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    {/* {hovered.field === 'experiences' && <OptionPopUp />} */}
+                </div>
+
+                {/* project section */}
+                {projects && <div className="relative border-0 mb-4 cursor-default">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Projects</h1>
+                    <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
+                        {projects.map((project, idx) => {
+                            return (
+                                <li onMouseEnter={(e) => setHovered({ field: `project-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                    <Project {...project} />
+                                    {hovered.field === `project-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'project', index: idx }}
+                                        add={() => {
+                                            console.log('add project');
+                                            resumeFieldsEdits.addField({ fieldItems: projects, item_idx: idx, fieldType: 'project', setToEdit });
+                                        }}
+                                        setToDelete={setDeleteField}
+                                        toDelete={{ fieldItems: projects, item_idx: idx, fieldType: 'project', setFieldItems: setProjects }}
+                                    />}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    {/* {hovered.field === 'projects' && <OptionPopUp />} */}
+                </div>
+                }
+
+                {/* education section */}
+                {education && <div className="relative border-0 mb-4 cursor-default">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Education</h1>
+                    <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
+                        {education.map((edu, idx) => {
+                            return (
+                                <li onMouseEnter={(e) => setHovered({ field: `education-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} key={idx} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                    <Education {...edu} />
+                                    {hovered.field === `education-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: "education", index: idx }}
+                                        add={() => {
+                                            console.log('add project');
+                                            resumeFieldsEdits.addField({ fieldItems: education, item_idx: idx, fieldType: 'education', setToEdit });
+                                        }}
+                                        setToDelete={setDeleteField}
+                                        toDelete={{ fieldItems: education, item_idx: idx, fieldType: 'education', setFieldItems: setEducation }}
+                                    />}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    {/* {hovered.field === 'education' && <OptionPopUp />} */}
+                </div>}
 
 
-            {/* certificate section */}
-            {certificates && <div className="relative border-0 mb-4 cursor-default">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Certificate</h1>
-                <ul className="flex flex-col list-none p-0 m-0 gap-4">
-                    {certificates.map((certificate, idx) => {
-                        return (
-                            <li key={idx} onMouseEnter={(e) => setHovered({ field: `certificate-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
-                                <Certificate {...certificate} />
-                                {hovered.field === `certificate-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'certificate', index: idx }} />}
-                            </li>
-                        );
-                    })}
-                </ul>
-                {/* {hovered.field === 'certificate' && <OptionPopUp />} */}
-            </div>
-            }
+                {/* certificate section */}
+                {certificates && <div className="relative border-0 mb-4 cursor-default">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Certificate</h1>
+                    <ul className="flex flex-col list-none p-0 m-0 gap-4">
+                        {certificates.map((certificate, idx) => {
+                            return (
+                                <li key={idx} onMouseEnter={(e) => setHovered({ field: `certificate-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-4 hover:border hover:drop-shadow-sm">
+                                    <Certificate {...certificate} />
+                                    {hovered.field === `certificate-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'certificate', index: idx }}
+                                        add={() => {
+                                            console.log('add project');
+                                            resumeFieldsEdits.addField({ fieldItems: certificates, item_idx: idx, fieldType: 'certificate', setToEdit });
+                                        }}
+                                        setToDelete={setDeleteField}
+                                        toDelete={{ fieldItems: certificates, item_idx: idx, fieldType: 'certificate', setFieldItems: setCertificates }}
+                                    />}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    {/* {hovered.field === 'certificate' && <OptionPopUp />} */}
+                </div>
+                }
 
-            {/* language section */}
-            <div className="relative border-0 mb-4 cursor-default">
-                <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Languages</h1>
-                <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
-                    {languages.map((lang, idx) => {
-                        return (
-                            <li key={idx} onMouseEnter={(e) => setHovered({ field: `language-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-1 hover:border hover:drop-shadow-sm">
-                                <Language {...lang} />
-                                {hovered.field === `language-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'language', index: idx }} />}
-                            </li>
-                        );
-                    })}
-                </ul>
+                {/* language section */}
+                <div className="relative border-0 mb-4 cursor-default">
+                    <h1 className="min-w-full font-semibold text-center text-zinc-900 border-b border-slate-400">Languages</h1>
+                    <ul className="p-0 m-0 flex flex-col items-stretch justify-between gap-y-3 list-none">
+                        {languages.map((lang, idx) => {
+                            return (
+                                <li key={idx} onMouseEnter={(e) => setHovered({ field: `language-${idx}` })} onMouseLeave={(e) => setHovered({ field: '' })} className="relative p-0 m-0 transition-transform ease-in hover:scale-110 hover:bg-slate-200 hover:p-4 hover:mt-1 hover:border hover:drop-shadow-sm">
+                                    <Language {...lang} />
+                                    {hovered.field === `language-${idx}` && <OptionPopUp setToEdit={setToEdit} toEdit={{ field: 'language', index: idx }}
+                                        add={() => {
+                                            console.log('add language');
+                                            resumeFieldsEdits.addField({ fieldItems: languages, item_idx: idx, fieldType: 'language', setToEdit: setToEdit });
+                                        }}
+                                        setToDelete={setDeleteField}
+                                        toDelete={{ fieldItems: languages, item_idx: idx, fieldType: 'language', setFieldItems: setLanguages }}
+                                    />}
+                                </li>
+                            );
+                        })}
+                    </ul>
 
-                {/* {hovered.field === 'languages' && <OptionPopUp />} */}
-            </div>
+                    {/* {hovered.field === 'languages' && <OptionPopUp />} */}
+                </div>
 
 
-            {toEdit.field === 'title' && <resumeFieldsEdits.EditTitle title={title} setTitle={setTitle} setToEdit={setToEdit} />}
-            {toEdit.field === 'summary' && <resumeFieldsEdits.EditSummary summary={summary} setSummary={setSummary} setToEdit={setToEdit}></resumeFieldsEdits.EditSummary>}
-            {toEdit.field === 'skills' && <resumeFieldsEdits.EditSkills skills={skills} setSkills={setSkills} setToEdit={setToEdit}></resumeFieldsEdits.EditSkills>}
-            {toEdit.field === 'experience' && <resumeFieldsEdits.EditExperience experiences={experiences} experience_idx={toEdit.index} setExperiences={setExperiences} setToEdit={setToEdit}></resumeFieldsEdits.EditExperience>}
-            {toEdit.field === 'project' && projects && setProjects && <resumeFieldsEdits.EditProject projects={projects} project_idx={toEdit.index} setProjects={setProjects} setToEdit={setToEdit}></resumeFieldsEdits.EditProject>}
-            {toEdit.field === 'education' && <resumeFieldsEdits.EditEducation educations={education} education_idx={toEdit.index} setEducations={setEducation} setToEdit={setToEdit}></resumeFieldsEdits.EditEducation>}
-            {toEdit.field === 'certificate' && certificates && setCertificates && < resumeFieldsEdits.EditCertificate certificates={certificates} certificate_idx={toEdit.index} setCertificates={setCertificates} setToEdit={setToEdit}></resumeFieldsEdits.EditCertificate>}
-            {/* {toEdit.field === 'language' && <EditLanguage />} */}
-        </article >
+                {toEdit.field === 'title' && <resumeFieldsEdits.EditTitle title={title} setTitle={setTitle} setToEdit={setToEdit} />}
+                {toEdit.field === 'summary' && <resumeFieldsEdits.EditSummary summary={summary} setSummary={setSummary} setToEdit={setToEdit}></resumeFieldsEdits.EditSummary>}
+                {toEdit.field === 'skills' && <resumeFieldsEdits.EditSkills skills={skills} setSkills={setSkills} setToEdit={setToEdit}></resumeFieldsEdits.EditSkills>}
+                {toEdit.field === 'experience' && <resumeFieldsEdits.EditExperience experiences={experiences} experience_idx={toEdit.index || 0} setExperiences={setExperiences} setToEdit={setToEdit}></resumeFieldsEdits.EditExperience>}
+                {toEdit.field === 'project' && projects && setProjects && <resumeFieldsEdits.EditProject projects={projects} project_idx={toEdit.index || 0} setProjects={setProjects} setToEdit={setToEdit}></resumeFieldsEdits.EditProject>}
+                {toEdit.field === 'education' && <resumeFieldsEdits.EditEducation educations={education} education_idx={toEdit.index || 0} setEducations={setEducation} setToEdit={setToEdit}></resumeFieldsEdits.EditEducation>}
+                {toEdit.field === 'certificate' && certificates && setCertificates && < resumeFieldsEdits.EditCertificate certificates={certificates} certificate_idx={toEdit.index || 0} setCertificates={setCertificates} setToEdit={setToEdit}></resumeFieldsEdits.EditCertificate>}
+                {toEdit.field === 'language' && <resumeFieldsEdits.EditLanguage languages={languages} language_idx={toEdit.index || 0} setLanguages={setLanguages} setToEdit={setToEdit} />}
+            </article >
+        </>
     );
 }

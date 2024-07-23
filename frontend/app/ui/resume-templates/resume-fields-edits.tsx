@@ -1,7 +1,59 @@
 // resume fields customization panel, [add field, remove field]
 
-import { certificateProps, educationProps, experienceProps, Link, projectsProps, titleProps } from "./interfaces";
+import { renderToHTML } from "next/dist/server/render";
+import { AlertWrongCredentials } from "../alerts";
+import { certificateProps, educationProps, experienceProps, language, Link, projectsProps, titleProps } from "./interfaces";
 
+/*=============================================
+            Add filed functions
+==============================================*/
+
+// add a new field function for the skills template field
+
+// add new field function for the rest template fields
+export function addField({
+    fieldItems,
+    item_idx,
+    fieldType,
+    setToEdit,
+}: { fieldItems: object[], item_idx: number, fieldType: string, setToEdit: Function }) {
+    // copy the experience data that clicked to new experience object
+    const newItem: object = { ...fieldItems[item_idx] };
+    console.log(newItem);
+    // add the new experience to the fieldItems array on the index after the item_idx and set it to the state
+    fieldItems.splice(item_idx + 1, 0, newItem);
+    console.log();
+    console.log(fieldItems);
+    console.log();
+    // call the EditExperience function to edit the new experience
+    setToEdit({ field: fieldType, index: item_idx + 1 });
+}
+
+
+/*=============================================
+            remove field functions
+==============================================*/
+export function removeField({
+    fieldItems,
+    item_idx,
+    fieldType,
+    setFieldItems,
+}: { fieldItems: object[], item_idx: number, fieldType: string, setFieldItems: Function }) {
+    // the required field on each resume 
+    if (fieldItems.length <= 1 && fieldType in ['title', 'project', 'education', 'skills']) {
+        /// show alert that at least on field is required
+        // AlertWrongCredentials({ message: 'At least one field is required' })
+        <AlertWrongCredentials message="At least one field is required" />
+        return;
+    }
+    // remove the field item from the fieldItems array and set the new array to the state
+    fieldItems.splice(item_idx, 1);
+    setFieldItems([...fieldItems]);
+}
+
+/*=============================================
+            edit field functions
+==============================================*/
 export function EditTitle(
     {
         title,
@@ -301,24 +353,27 @@ export function EditCertificate({
             <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
                     <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900">Title</label>
-                    <input type="text" value={certificates[certificate_idx].title} id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" onChange={(e) => {
-                        certificates[certificate_idx].title = e.target.value;
-                        setCertificates([...certificates]);
-                    }} />
+                    <input type="text" value={certificates[certificate_idx].title} id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                        onChange={(e) => {
+                            certificates[certificate_idx].title = e.target.value;
+                            setCertificates([...certificates]);
+                        }} />
                 </div>
                 <div className="md:col-span-3">
                     <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">Description</label>
-                    <textarea rows={certificates[certificate_idx].description.split(' ').length / 7} value={certificates[certificate_idx].description} id="description" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" onChange={(e) => {
-                        certificates[certificate_idx].description = e.target.value;
-                        setCertificates([...certificates]);
-                    }} />
+                    <textarea rows={certificates[certificate_idx].description.split(' ').length / 7} value={certificates[certificate_idx].description} id="description" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                        onChange={(e) => {
+                            certificates[certificate_idx].description = e.target.value;
+                            setCertificates([...certificates]);
+                        }} />
                 </div>
                 <div className="md:col-span-3 flex flex-col md:flex-row gap-3 items-center">
                     <button className="w-full max-w-fit text-sm bg-[rgb(var(--primary-rgb))] text-[rgb(var(--background-start-rgb))] rounded-lg p-2" onClick={() => setToEdit({ field: '', index: -1 })}>Save</button>
-                    <button className="w-full max-w-fit text-sm text-[rgb(var(--primary-rgb))] rounded-lg p-2" onClick={() => {
-                        // setSummary(oldSummary);
-                        setToEdit({ field: '', index: -1 });
-                    }}>
+                    <button className="w-full max-w-fit text-sm text-[rgb(var(--primary-rgb))] rounded-lg p-2"
+                        onClick={() => {
+                            // setSummary(oldSummary);
+                            setToEdit({ field: '', index: -1 });
+                        }}>
                         Discard Changes
                     </button>
                 </div>
@@ -329,4 +384,52 @@ export function EditCertificate({
         //     <p className="w-full p-0 m-0 text-zinc-600 text-xs">{description}</p>
         // </div>
     )
+}
+
+export function EditLanguage({
+    languages,
+    language_idx,
+    setLanguages,
+    setToEdit,
+}: { languages: language[], language_idx: number, setLanguages: Function, setToEdit: Function }) {
+
+    console.log(languages);
+    console.log(languages[language_idx]);
+    return (
+        <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+                <div className="md:col-span-3">
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Name</label>
+                    <input type="text" value={languages[language_idx]?.name} id="name" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                        onChange={(e) => {
+                            languages[language_idx].name = e.target.value;
+                            setLanguages([...languages]);
+                        }} />
+                </div>
+                <div className="md:col-span-3">
+                    <label htmlFor="proficient" className="block mb-2 text-sm font-medium text-gray-900">Proficient</label>
+                    <select id="proficient" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" value={languages[language_idx].proficient}
+                        onChange={(e) => {
+                            languages[language_idx].proficient = e.target.value;
+                            setLanguages([...languages]);
+                        }}>
+                        <option className="hover:rgba(var(--primary-light-rgba))">Beginner</option>
+                        <option className="hover:rgba(var(--primary-light-rgba))">Intermediate</option>
+                        <option className="hover:rgba(var(--primary-light-rgba))">Good working Knowledge</option>
+                        <option className="hover:rgba(var(--primary-light-rgba))">Proficient</option>
+                        <option className="hover:rgba(var(--primary-light-rgba))">Native</option>
+                    </select>
+                </div>
+                <div className="md:col-span-3 flex flex-col md:flex-row gap-3 items-center">
+                    <button className="w-full max-w-fit text-sm bg-[rgb(var(--primary-rgb))] text-[rgb(var(--background-start-rgb))] rounded-lg p-2" onClick={() => setToEdit({ field: '', index: -1 })}>Save</button>
+                    <button className="w-full max-w-fit text-sm text-[rgb(var(--primary-rgb))]  rounded-lg p-2" onClick={() => {
+                        // setSummary(oldSummary);
+                        setToEdit({ field: '', index: -1 });
+                    }}>
+                        Discard Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 }
