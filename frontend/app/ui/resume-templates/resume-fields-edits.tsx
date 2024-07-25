@@ -64,13 +64,13 @@ export function EditTitle(
     const oldTitle = { name: title.name, jobTitle: title.jobTitle, links: title.links }
     return (
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
-                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))]">Name</label>
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-[rgb(var(--secondary-rgb))]">Name</label>
                     <input type="text" id="name" className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" value={title.name} required onChange={(e) => setTitle({ ...title, name: e.target.value })} />
                 </div>
                 <div className="md:col-span-3">
-                    <label htmlFor="jobTitle" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))]">Job Title</label>
+                    <label htmlFor="jobTitle" className="block mb-2 text-sm font-medium text-[rgb(var(--secondary-rgb))]">Job Title</label>
                     <input type="text" id="jobTitle" className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" value={title.jobTitle} required onChange={(e) => setTitle({ ...title, jobTitle: e.target.value })} />
                 </div>
                 {
@@ -115,7 +115,7 @@ export function EditSummary({
 
     return (
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
                     <label htmlFor="summary" className="block mb-2 text-sm font-medium text-gray-900">Summary</label>
                     <textarea id="summary" rows={summary.split(' ').length / 7} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" value={summary} onChange={(e) => setSummary(e.target.value)}></textarea>
@@ -143,7 +143,7 @@ export function EditSkills({
 
     return (
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
                     <label htmlFor="skills" className="block mb-2 text-sm font-medium text-gray-900">Skills</label>
                     <textarea id="skills" rows={skills.length / 3} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" value={skills.join(',')} onChange={(e) => setSkills(e.target.value.split(','))}></textarea>
@@ -171,7 +171,7 @@ export function EditExperience({
 
     return (
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3 flex flex-row justify-between items-stretch p-0 m-0 mb-1">
                     <div className="w-2/3">
                         <input type="text" name="compony-name" id="compony-name" value={experiences[experience_idx].companyName} className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0"
@@ -242,7 +242,7 @@ export function EditProject({
     return (
 
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
                     <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900">Title</label>
                     <input type="text" value={projects[project_idx].title} id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" onChange={(e) => {
@@ -279,7 +279,7 @@ export function EditEducation({
 }: { educations: educationProps[], education_idx: number, setEducations: Function, setToEdit: Function }) {
     return (
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3 flex flex-row justify-between items-stretch p-0 m-0 mb-1">
                     <div className="w-2/3">
                         <input type="text" name="school-name" id="compony-name" value={educations[education_idx].schoolName} className="w-full p-4 text-slate-600 text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0"
@@ -350,7 +350,7 @@ export function EditCertificate({
     return (
 
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
                     <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900">Title</label>
                     <input type="text" value={certificates[certificate_idx].title} id="title" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
@@ -397,7 +397,7 @@ export function EditLanguage({
     console.log(languages[language_idx]);
     return (
         <div className="w-svw h-svh fixed top-0 left-0 bottom-0 bg-transparent flex justify-center items-center  z-50" aria-hidden={true}>
-            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 backdrop-blur-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
+            <div className="grid gap-6 mb-6 grid-cols-1 md:grid-cols-3 bg-[rgb(var(--background-end-rgb))] rounded-lg w-full max-w-screen-md max-h-[720px] p-6 overflow-auto">
                 <div className="md:col-span-3">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Name</label>
                     <input type="text" value={languages[language_idx]?.name} id="name" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"

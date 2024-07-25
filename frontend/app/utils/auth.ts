@@ -1,55 +1,83 @@
 'use client';
 // responsible for handling authentication and authorization
 import useSWR from 'swr';
-import { globalFetcher } from "@/app/utils/api-client";
-import { UserResponse, TokenResponse } from "@/app/utils/interfaces";
+import { globalFetcher } from '@/app/utils/api-client';
+import { UserResponse, TokenResponse } from '@/app/utils/interfaces';
+import { useEffect } from 'react';
 
 /**
  * Check if the current user is authenticated
- * 
+ *
  * @returns {UserResponse} an object that contains information about the user request
  */
-export function useUser(): UserResponse {
-    const tokenString =  localStorage.getItem('auth-token');
+export function useUser(setUser: Function): any {
+  useEffect(() => {
+    const tokenString = window.localStorage.getItem('auth-token');
     const tokenObject = tokenString ? JSON.parse(tokenString) : null;
 
     if (!tokenObject) {
-        return {
-            user: null,
-            isLoading: false,
-            isError: Error('Access token not found')
-        };
+      setUser({
+        user: null,
+        isLoading: false,
+        isError: Error('Access token not found'),
+      });
+      return;
     }
-    const {data, error, isLoading} = useSWR(
-        {url: '/users/me', method: 'GET', token: tokenObject},
-        globalFetcher,
-        {revalidateOnFocus: false, revalidateOnReconnect: true}
-    );
-    return {
-        user: data,
-        isLoading,
-        isError: error
-    };
+    // const { data, error, isLoading } = useSWR(
+    //   { url: '/users/me', method: 'GET', token: tokenObject },
+    //   globalFetcher,
+    //   { revalidateOnFocus: false, revalidateOnReconnect: true }
+    // );
+    setUser({
+      user: null,
+      isLoading: true,
+      isError: null,
+    });
+
+    globalFetcher({
+      url: '/users/me',
+      method: 'GET',
+      token: tokenObject,
+    })
+      .then((res: UserResponse) => {
+        setUser({
+          user: res,
+          isLoading: false,
+          isError: null,
+        });
+      })
+      .catch((error) => {
+        setUser({
+          user: null,
+          isLoading: false,
+          isError: error,
+        });
+      });
+  }, []);
 }
 
-export async function registerUser(formData: FormData): Promise<TokenResponse> {
-    const formDataObj = Object.fromEntries(formData.entries());
+export async function registerUser(
+  formData: FormData
+): Promise<TokenResponse> {
+  const formDataObj = Object.fromEntries(formData.entries());
 
-    try {
-        const res = await globalFetcher({
-            url: '/users',
-            method: 'POST',
-            token: '',
-            contentType: 'application/json',
-            bodyData: JSON.stringify(formDataObj),
-        });
-        if (!res.access_token) {
-            throw new Error('Error happened in the registration process, please try again');
-        }
-        return {accessToken: res.access_token, isError: null, isLoading: false};
-    } catch (error) {
-        return {accessToken: null, isError: error, isLoading: false};
+  try {
+    const res = await globalFetcher({
+      url: '/users',
+      method: 'POST',
+      token: '',
+      contentType: 'application/json',
+      bodyData: JSON.stringify(formDataObj),
+    });
+    if (!res.access_token) {
+      throw new Error(
+        'Error happened in the registration process, please try again'
+      );
     }
+    return { accessToken: res.access_token, isError: null, isLoading: false };
+  } catch (error) {
+    return { accessToken: null, isError: error, isLoading: false };
+  }
 }
 
 /**
@@ -59,21 +87,26 @@ export async function registerUser(formData: FormData): Promise<TokenResponse> {
  *                  such as grant_type, client_id, and client_secret
  * @returns {TokenResponse} an object that contains the access token, and some information about the request
  */
-export async function getLoginToken(formData: FormData): Promise<TokenResponse> {
-
-    try {
-        const res = await globalFetcher ({
-            url:'auth/session',
-            method: 'POST',
-            token: '',
-            bodyData: formData,
-            contentType: 'application/x-www-form-urlencoded'
-        });
-        if (!res.access_token) {
-            throw new Error('Access token not found');
-        }
-        return {accessToken: res.access_token, isError: null, isLoading: false};
-    } catch (error:{response: {data: any, status: number}} | any) {
-        return {accessToken:null, isError: {...error.response.data, status: error.response.status}, isLoading: false};
+export async function getLoginToken(
+  formData: FormData
+): Promise<TokenResponse> {
+  try {
+    const res = await globalFetcher({
+      url: 'auth/session',
+      method: 'POST',
+      token: '',
+      bodyData: formData,
+      contentType: 'application/x-www-form-urlencoded',
+    });
+    if (!res.access_token) {
+      throw new Error('Access token not found');
     }
+    return { accessToken: res.access_token, isError: null, isLoading: false };
+  } catch (error: { response: { data: any; status: number } } | any) {
+    return {
+      accessToken: null,
+      isError: { ...error.response.data, status: error.response.status },
+      isLoading: false,
+    };
+  }
 }

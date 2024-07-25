@@ -46,7 +46,7 @@ export default function SignUp() {
             <div className="flex items-center justify-center w-svw h-svh bg-opacity-45 bg-no-repeat bg-center bg-[url('/bg-1.jpg')]">
                 {unAuth.isError && <AlertWrongCredentials message={unAuth.message} />}
                 <main className="flex self-center justify-self-center w-full max-w-[640px] h-fit min-h-[470px] border-0 rounded-3xl flex-col items-stretch justify-center 
-            gap-4 mx-2 md:mx-auto p-8 md:p-16 text-[rgb(var(--primary-rgb))] bg-[rgb(var(--background-start-rgb))] drop-shadow-2xl">
+            gap-4 mx-2 md:mx-auto p-8 md:p-16 text-[rgb(var(--secondary-rgb))] bg-[rgb(var(--background-end-rgb))] drop-shadow-2xl">
                     {/* <SignUpForm onSubmit={handleSubmit} validatePasswordMatch={validatePasswordMatch} setPass={setPass} passUnMatch /> */}
                     <SignUpForm onSubmit={handleSubmit} />
                 </main>

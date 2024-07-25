@@ -9,7 +9,7 @@ import { getLoginToken } from "@/app/utils/auth";
 export default function LoginForm({ onSubmit }: { onSubmit: (event: BaseSyntheticEvent) => void }) {
     return (
         <>
-            <form onSubmit={onSubmit} className="flex flex-col space-y-6 text-[rgba(var(--primary-rgb))] opacity-100 drop-shadow-2xl">
+            <form onSubmit={onSubmit} className="flex flex-col space-y-6 opacity-100 drop-shadow-2xl">
                 <label htmlFor="input-group-1" className="block mb-2 text-sm font-medium">Your Email</label>
                 <div className="relative mb-6">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -18,7 +18,7 @@ export default function LoginForm({ onSubmit }: { onSubmit: (event: BaseSyntheti
                             <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
                         </svg>
                     </div>
-                    <input type="email" name="username" id="input-group-1" className="bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="name@example.com" required />
+                    <input type="email" name="username" id="input-group-1" className="bg-gray-50 border border-gray-300 text-sm text-[rgb(var(--background-start-rgb))] rounded-lg :border-blue-500 block w-full ps-10 p-2.5 " placeholder="name@example.com" required />
                 </div>
                 <label htmlFor="password" className="block mb-2 text-sm font-medium">Password</label>
                 <div className="flex">
@@ -37,7 +37,7 @@ export default function LoginForm({ onSubmit }: { onSubmit: (event: BaseSyntheti
                     <a href="#" className="text-xs hover:underline">Forgot Password?</a>
                 </div>
                 <div>
-                    <input type="submit" value="Login" className="mt-4 p-3 border rounded-md w-full self-end cursor-pointer hover:bg-slate-50 transition-colors ease-in delay-75" />
+                    <input type="submit" value="Login" className="mt-4 p-3 border rounded-md w-full self-end cursor-pointer hover:text-[rgb(var(--background-start-rgb))] hover:bg-slate-50 transition-colors ease-in delay-75" />
                 </div>
             </form>
         </>

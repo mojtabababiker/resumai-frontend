@@ -5,11 +5,14 @@ import { DashboardNavBar } from "@/app/ui/nav_bar";
 import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
 import * as templates from "@/app/ui/resume-templates/templates";
 import { useUser } from "@/app/utils/auth";
-import { BaseSyntheticEvent, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { addResume, enhanceResume, updateResume } from "@/app/utils/resumes-client";
 import { downloadPDF } from "@/app/utils/download-pdf";
 import { AlertResumeCreated } from "@/app/ui/alerts";
 import { templateProps, resumeData } from "@/app/ui/resume-templates/interfaces";
+import { UserResponse } from "@/app/utils/interfaces";
+import Loading from "./loading";
+import { redirect } from "next/navigation";
 
 /////////////////////////////
 //
@@ -134,11 +137,11 @@ const dummyData: templateProps = {
 /////////////////////////////
 
 export default function ResumeDraftPage({ params }: { params: { id: string } }) {
-    let ResumeData: resumeData = dummyData;
-    const resume = window.localStorage.getItem('toEditResume');
     const templateId = params.id;
-    const buttonCssClass = 'text-[rgb(var(--primary-rgb))] hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
+    const buttonCssClass = 'text-[rgb(var(--secondary-rgb))] font-light hover:scale-110 focus:ring-0 focus:outline-none text-xs px-5 py-2.5 text-center inline-flex items-center';
 
+    const [user, setUser]: [user: UserResponse, setUser: Function] = useState({ user: null, isLoading: false, isError: null });
+    useUser(setUser);
     const [activeTab, setActiveTab] = useState({ btn_id: 'desc-section-btn', tab_id: 'desc-section' });
     const [jobDescription, setJobDescription] = useState('');
     const [jobUrl, setJobUrl] = useState('');
@@ -147,10 +150,17 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     const [insertJobDesc, setInsertJobDesc] = useState(false);
     const [showModal, setShowModal] = useState({ modalType: '', message: '' });
 
-    if (resume) {
-        ResumeData = JSON.parse(resume);
-        // console.log(`Resume Data ===> ${ResumeData}`);
-    }
+    const [ResumeData, setResumeData] = useState(dummyData);
+    // let ResumeData: resumeData = dummyData;
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const resume = window.localStorage.getItem('toEditResume');
+            if (resume) {
+                setResumeData(JSON.parse(resume));
+                // console.log(`Resume Data ===> ${ResumeData}`);
+            }
+        }
+    }, []);
     // template fields states
     const [title, setTitle] = useState(ResumeData.title);
     const [summary, setSummary] = useState(ResumeData.summary);
@@ -161,7 +171,6 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     const [certificates, setCertificates] = useState(ResumeData.certificates);
     const [languages, setLanguages] = useState(ResumeData.languages);
 
-
     const handleTabDisplay = (event: BaseSyntheticEvent) => {
         setActiveTab({ btn_id: event.target.id, tab_id: event.target.getAttribute('itemID') });
     }
@@ -169,15 +178,13 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     const closeModal = () => {
         setShowModal({ modalType: '', message: '' });
     }
-
-    const user = useUser();
     if (user.isLoading) {
-        return <h1 className='text-[340px]'>Loading...</h1>;
+        return <Loading />;
     }
-    if (!user.user) {
-        console.log(user);
-        window.location.href = '/auth/login';
-        return;
+    if (!(user.user)) {
+        console.error(user.isError);
+        // alert(user.isError);
+        // redirect('/auth/login');
     }
 
     const saveResume = async () => {
@@ -196,7 +203,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
         // call the api util to save the
         // console.log(`Saving...\n\n${JSON.stringify(resumeObj)}\n\n`);
         try {
-            if (ResumeData.resumeId) {
+            if (ResumeData.resumeId !== undefined) {
                 const res = await updateResume({ resumeId: ResumeData.resumeId, ...resumeObj });
                 console.log(res);
                 setShowModal({ modalType: 'success-modal', message: 'Resume Updated successfully...' });
@@ -225,7 +232,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
             const enhancedResume = await enhanceResume(resumeToUpdate, jobUrl, jobDescription);
             // console.log(JSON.stringify(enhancedResume.scoring_insights));
             const scoresAndInsights = enhancedResume.scoring_insights;
-            ResumeData = { templateId, ...enhancedResume.resume_data };
+            setResumeData({ templateId, ...enhancedResume.resume_data });
 
             setTitle(ResumeData.title);
             setSummary(ResumeData.summary);
@@ -262,12 +269,9 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     if (templateId?.toLowerCase() === 'ivy-template') {
         return (
             <>
-                <div className='w-svw fixed top-0 left-0 bottom-0 bg-cover bg-no-repeat bg-[url("/bg-1.jpg")] overflow-x-hidden'>
-                </div>
-                <main className='relative w-full max-w-screen-xl h-svh overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-16 md:mt-5 bg-[rgb(var(--background-start-rgb))]'>
-
+                <main className='relative w-full max-w-screen-xl h-svh overflow-x-hidden flex flex-col items-center p-0 md:p-4 mt-16 md:mt-5 sbg-[rgb(var(--background-start-rgb))]'>
                     <DashboardNavBar user={user.user} ></DashboardNavBar>
-                    <section className="w-full min-w-[1280px] top-0 z-10 max-w-screen-xl pb-32  bg-center bg-scroll bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
+                    <section className="w-full min-w-[1280px] top-0 z-10 max-w-screen-xl pb-32  bg-center bg-[rgba(var(--primary-light-rgba))] rounded-b-lg">
 
                     </section>
                     <section className="mt-10 md:mt-4 w-full px-10">
@@ -294,7 +298,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                                 </svg>
                             </ButtonSolid>
                             <aside id="default-sidebar" className="sticky hidden md:block top-36 right-0 w-80 md:w-1/2 lg:w-1/3 max-w-[320px] h-[620px] max-h-dvh overflow-x-hidden overflow-y-auto border-2 rounded-xl border-[rgb(var(--primary-rgb))] transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-                                <div className="h-full px-3 py-4 border-0 rounded-xl text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] overflow-y-auto scroll-m-0">
+                                <div className="h-full px-3 py-4 border-0 rounded-xl text-[rgb(var(--secondary-rgb))] bg-[rgb(var(--background-start-rgb))] overflow-y-auto scroll-m-0">
                                     {/* navigation section */}
                                     <section className='min-w-full mb-10 flex flex-col gap-y-10 justify-stretch overflow-hidden border-0 border-b border-[rgba(255, 255, 255, 0.01)] border-opacity-10'>
                                         <div className='flex justify-start gap-3 overflow-hidden'>
@@ -305,10 +309,10 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
                                     <section className="w-full h-[320px] flex flex-col gap-5 overflow-y-auto scroll-m-0 transition-all ease-in delay-100">
                                         {/* adding job description section */}
                                         {activeTab.tab_id == 'desc-section' && <section className="w-full flex flex-col items-center justify-center gap-5">
-                                            <label htmlFor="jobUrl" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))]">Getting the job description by the link</label>
+                                            <label htmlFor="jobUrl" className="block mb-2 text-sm font-light stext-[rgb(var(--primary-rgb))]">Getting the job description by the link</label>
                                             <input type="text" id="jobUrl" onChange={(e) => setJobUrl(e.target.value)} className="w-full p-4 text-[rgb(var(--primary-rgb))] text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0" placeholder="https://www.linkedin.com/jobs/view/231314127" />
 
-                                            <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="jobDesc" className="block mb-2 text-sm font-medium text-[rgb(var(--primary-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
+                                            <label onClick={(e) => { setInsertJobDesc(!insertJobDesc) }} htmlFor="jobDesc" className="block mb-2 text-sm font-light stext-[rgb(var(--primary-rgb))] cursor-pointer hover:border-b">Or Copy and Past the job description directly</label>
                                             <textarea rows={7} id="jobDesc" onChange={(e) => setJobDescription(e.target.value)} className={`w-full p-4 text-[rgb(var(--primary-rgb))] text-sm border-0 rounded-xl outline-none focus:outline-none focus:ring-0 ${insertJobDesc ? 'block' : 'hidden'}`} placeholder="Past the job description here..." />
 
                                             <ButtonSolid onClick={handleGenerate} className="w-1/2">Generate</ButtonSolid>

@@ -34,7 +34,7 @@ export const AlertResumeCreated = ({ closeModel, message }: { closeModel: MouseE
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                         <h3 className="mb-5 text-lg font-normal text-gray-200">{message}</h3>
-                        <Link href={'/dashboard'} type="button" className="text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                        <Link href={'/dashboard'} type="button" className="text-[rgb(var(--secondary-rgb))] bg-[rgb(var(--background-start-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                             Back Home
                         </Link>
                         <button onClick={closeModel} data-modal-hide="popup-modal" type="button" className="py-2.5 px-5 ms-3 text-sm font-medium text-[rgba(var(--primary-light-rgba))] focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Stay</button>
@@ -66,7 +66,7 @@ export const AlertResumeDelete = ({ closeModel, confirm, message, toDelete }: { 
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
                         <h3 className="mb-5 text-lg font-normal">{message}</h3>
-                        <button onClick={confirmAndExit} type="button" className="text-[rgba(var(--primary-light-rgba))] bg-[rgb(var(--background-start-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                        <button onClick={confirmAndExit} type="button" className="text-[rgb(var(--secondary-rgb))] font-light bg-[rgb(var(--background-end-rgb))] hover:bg-opacity-85 focus:ring-0 focus:outline-none rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                             Delete Any Way
                         </button>
                         <button onClick={closeModel} data-modal-hide="popup-modal" type="button" className="py-2.5 px-5 ms-3 text-sm font-medium text-[rgba(var(--primary-light-rgba))] focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100">Stay</button>
