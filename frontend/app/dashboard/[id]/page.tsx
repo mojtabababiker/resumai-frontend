@@ -1,5 +1,5 @@
-// render the crafting page for resume based on the query parameter
 'use client';
+// render the crafting page for resume based on the query parameter
 
 import { DashboardNavBar } from "@/app/ui/nav_bar";
 import { ButtonSolid, ButtonOutLine } from "@/app/ui/buttons";
@@ -142,6 +142,7 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
 
     const [user, setUser]: [user: UserResponse, setUser: Function] = useState({ user: null, isLoading: false, isError: null });
     useUser(setUser);
+
     const [activeTab, setActiveTab] = useState({ btn_id: 'desc-section-btn', tab_id: 'desc-section' });
     const [jobDescription, setJobDescription] = useState('');
     const [jobUrl, setJobUrl] = useState('');
@@ -155,13 +156,27 @@ export default function ResumeDraftPage({ params }: { params: { id: string } }) 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const resume = window.localStorage.getItem('toEditResume');
+            // console.log(resume);
             if (resume) {
-                setResumeData(JSON.parse(resume));
-                // console.log(`Resume Data ===> ${ResumeData}`);
+                const data = JSON.parse(resume);
+                // console.log(`Data ===> ${JSON.stringify(data)}`);
+                setResumeData(data);
+                setTitle(data.title);
+                setSummary(data.summary);
+                setSkills(data.skills);
+                setExperiences(data.experiences);
+                setEducation(data.education);
+                setProjects(data.projects);
+                setCertificates(data.certificates);
+                setLanguages(data.languages);
+                // console.log(`Resume Data ===> ${JSON.stringify(ResumeData)}`);
             }
         }
     }, []);
+
     // template fields states
+
+
     const [title, setTitle] = useState(ResumeData.title);
     const [summary, setSummary] = useState(ResumeData.summary);
     const [skills, setSkills] = useState(ResumeData.skills);
