@@ -1,1 +1,0 @@
-// resume fields customization panel, [add field, remove field]

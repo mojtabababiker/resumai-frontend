@@ -10,7 +10,7 @@ export default function HeroImagesSlider() {
     <>
       <div className="flex items-center justify-end overflow-hidden">
         {images.map((image, index) => (
-          <div className='w-full p-1'>
+          <div key={index} className='w-full p-1'>
             <Image
               key={index}
               src={image}

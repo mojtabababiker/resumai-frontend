@@ -17,7 +17,7 @@ export const apiClient = axios.create({
  */
 export const globalFetcher = async ({url, method, token, bodyData, contentType='application/json' }: globalFetcherProps) => {
     try{
-        console.log('befor API call data = ' + bodyData);
+        // console.log('befor API call data = ' + bodyData);
         const {status, data} = await apiClient.request(
             {
                 url,
